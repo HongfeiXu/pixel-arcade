@@ -12,6 +12,31 @@
 | PWA | Vite PWA Plugin | Service Worker + Manifest |
 | 部署 | GitHub Pages | GitHub Actions 自动构建 |
 
+## 项目结构
+
+```
+src/
+  App.tsx                — 路由、全局布局
+  pages/
+    Home.tsx             — 游戏大厅（游戏列表）
+    GamePage.tsx         — 通用游戏容器页面
+  games/
+    registry.ts          — 游戏注册表
+    types.ts             — 统一游戏接口定义
+    tetris/
+      TetrisGame.ts      — 核心游戏逻辑（纯 JS 类）
+      config.ts          — 难度配置与数值参数
+      assets/            — 音效
+  components/
+    GamePad.tsx          — 虚拟手柄（通用）
+    ScoreBoard.tsx       — 计分板
+  hooks/
+    useGame.ts           — 游戏生命周期 hook
+  pwa/
+    service-worker.js
+    manifest.json
+```
+
 ## 架构分层
 
 ```
@@ -120,6 +145,15 @@ gameInstance.init(canvasRef.current, config);
 | `pixelarcade_scores` | useGame Hook | Home 页面 | 游戏结束时写入，大厅页加载时读取 |
 | `pixelarcade_{gameId}_state` | useGame Hook | GamePage | 暂停/切后台时写入，进入游戏页时读取 |
 | `pixelarcade_settings` | 设置组件 | useGame Hook | 用户切换时写入，游戏初始化时读取 |
+
+## 本地开发
+
+```bash
+npm install              # 安装依赖
+npm run dev -- --host    # 本地开发（手机访问加 --host）
+npm run build            # 构建生产版本
+npm run preview          # 预览生产构建
+```
 
 ## 屏幕适配
 
