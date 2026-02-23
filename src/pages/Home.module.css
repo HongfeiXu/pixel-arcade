@@ -1,0 +1,92 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 16px;
+}
+
+.header {
+  padding: 24px 0 16px;
+  text-align: center;
+}
+
+.title {
+  font-size: 20px;
+  color: #ffd600;
+}
+
+.grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  overflow-y: auto;
+  padding-bottom: 16px;
+}
+
+.card {
+  background: #16213e;
+  border: 2px solid #4a4a8a;
+  border-radius: 4px;
+  padding: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+  text-align: center;
+  transition: transform 50ms;
+}
+
+.card:active {
+  transform: scale(0.95);
+  background: #1a1a3e;
+}
+
+.locked {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.cardCover {
+  aspect-ratio: 1;
+  background: #1e2a4a;
+  border-radius: 2px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lockIcon {
+  font-size: 32px;
+}
+
+.cardName {
+  font-size: 10px;
+  margin-bottom: 4px;
+}
+
+.cardScore {
+  font-size: 10px;
+  color: #00e5ff;
+}
+
+.footer {
+  padding: 12px 0;
+  text-align: center;
+}
+
+.soundToggle {
+  background: #2d2d5e;
+  border: 2px solid #4a4a8a;
+  border-radius: 4px;
+  color: #ffd600;
+  font-family: inherit;
+  font-size: 10px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.soundToggle:active {
+  background: #1a1a3e;
+  transform: scale(0.95);
+}

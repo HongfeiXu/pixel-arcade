@@ -36,7 +36,7 @@ npm run build
 npm run preview
 ```
 
-## 项目结构（计划）
+## 项目结构
 
 ```
 src/

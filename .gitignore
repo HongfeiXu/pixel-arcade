@@ -1,0 +1,14 @@
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+.vscode/*
+!.vscode/extensions.json
+*.swp
+*.swo
+
+.DS_Store
+Thumbbs.db
+
+.claude/

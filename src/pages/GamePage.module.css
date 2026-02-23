@@ -1,0 +1,87 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+}
+
+.topBarRight {
+  display: flex;
+  gap: 8px;
+}
+
+.iconBtn {
+  background: none;
+  border: 2px solid #4a4a8a;
+  border-radius: 4px;
+  color: #ffd600;
+  font-size: 16px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.iconBtn:active {
+  background: #1a1a3e;
+  transform: scale(0.95);
+}
+
+.gameName {
+  font-size: 12px;
+  color: #ffd600;
+}
+
+.canvasArea {
+  flex: 1;
+  width: calc(100% - 16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #16213e;
+  margin: 0 8px;
+  border-radius: 4px;
+}
+
+.controlArea {
+  height: 38%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.placeholder {
+  font-size: 12px;
+  color: #4a4a8a;
+}
+
+.backBtn {
+  background: #2d2d5e;
+  border: 2px solid #4a4a8a;
+  border-radius: 4px;
+  color: #ffd600;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 12px 24px;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+.backBtn:active {
+  background: #1a1a3e;
+  transform: scale(0.95);
+}
