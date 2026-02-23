@@ -1,4 +1,5 @@
 import type { GameEntry } from './types'
+import { TetrisGame } from './tetris/TetrisGame'
 
 export const gameRegistry: GameEntry[] = [
   {
@@ -6,10 +7,8 @@ export const gameRegistry: GameEntry[] = [
       id: 'tetris',
       name: '俄罗斯方块',
       icon: '',
-      status: 'coming_soon', // 游戏逻辑实现后改为 'active'
+      status: 'active',
     },
-    createInstance: () => {
-      throw new Error('Tetris game not yet implemented')
-    },
+    createInstance: () => new TetrisGame(),
   },
 ]

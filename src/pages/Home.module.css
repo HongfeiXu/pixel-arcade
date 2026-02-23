@@ -90,3 +90,15 @@
   background: #1a1a3e;
   transform: scale(0.95);
 }
+
+/* 抖动动画 — coming_soon 卡片点击 */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-4px); }
+}
+
+.shake {
+  animation: shake 300ms ease-in-out;
+}

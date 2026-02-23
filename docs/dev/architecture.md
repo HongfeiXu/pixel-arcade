@@ -14,6 +14,8 @@
 
 ## 项目结构
 
+此结构为高层概要，按需维护。各游戏内部模块拆分见对应开发计划（如 `docs/dev/M1/PLAN.md`）。
+
 ```
 src/
   App.tsx                — 路由、全局布局
@@ -25,7 +27,6 @@ src/
     types.ts             — 统一游戏接口定义
     tetris/
       TetrisGame.ts      — 核心游戏逻辑（纯 JS 类）
-      config.ts          — 难度配置与数值参数
       assets/            — 音效
   components/
     GamePad.tsx          — 虚拟手柄（通用）

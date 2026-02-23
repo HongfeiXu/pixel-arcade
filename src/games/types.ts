@@ -28,6 +28,7 @@ export interface GameInstance {
   // 状态
   getState(): GameState
   getScore(): number
+  getNextPieceType?(): string | null
 
   // 操控输入
   onInput(action: GameAction): void
