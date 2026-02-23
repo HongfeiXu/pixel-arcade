@@ -4,7 +4,7 @@
 
 ## 在线体验
 
-> 部署完成后补充 GitHub Pages 地址
+https://hongfeixu.github.io/pixel-arcade/
 
 ## 游戏列表
 
