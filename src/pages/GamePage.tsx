@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { gameRegistry } from '../games/registry'
 import { useGame } from '../hooks/useGame'
+import { useKeyboard } from '../hooks/useKeyboard'
 import GamePad from '../components/GamePad'
 import ScoreBoard from '../components/ScoreBoard'
 import NextPiecePreview from '../components/NextPiecePreview'
@@ -107,6 +108,13 @@ export default function GamePage() {
       handleResume()
     }
   }, [state, pause, handleResume])
+
+  // 键盘控制
+  useKeyboard({
+    onAction: handleAction,
+    onPauseToggle: handlePauseBtn,
+    enabled: phase === 'playing',
+  })
 
   const handleRestoreLoad = useCallback(() => {
     loadSaved()

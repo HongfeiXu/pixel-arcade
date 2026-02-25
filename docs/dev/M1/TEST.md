@@ -24,6 +24,10 @@ M1 主体内容开发后，bug修复列表
 
 M1 主体内容开发后，feature 新增列表
 
+| # | 功能 | 状态 | 详情 |
+|---|------|------|------|
+| 001 | 支持键盘操作 | ✅ 已完成 | [feature-001-keyboard-controls.md](feature-001-keyboard-controls.md) |
+
 基于feature清单，对未处理的feature，新建 feature-xxx.md （合适的名字），到当前目录，进行plan。
 要求：
 1. 先不进行开发
