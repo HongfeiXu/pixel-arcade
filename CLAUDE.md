@@ -33,7 +33,9 @@ src/
     types.ts       — GameInstance / GameMeta / GameAction 统一接口
     registry.ts    — 游戏注册表
     tetris/        — 俄罗斯方块实现
-  hooks/useGame.ts — 游戏生命周期 Hook，桥接 React 与 GameInstance
+  hooks/
+    useGame.ts     — 游戏生命周期 Hook，桥接 React 与 GameInstance
+    useKeyboard.ts — 键盘控制 Hook（方向键 + WASD）
 docs/
   design/          — 视觉和玩法设计文档
   dev/             — 技术架构、API、部署文档

@@ -33,6 +33,7 @@ src/
     ScoreBoard.tsx       — 计分板
   hooks/
     useGame.ts           — 游戏生命周期 hook
+    useKeyboard.ts       — 键盘控制 hook（方向键 + WASD）
   pwa/
     service-worker.js
     manifest.json
