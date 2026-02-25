@@ -15,6 +15,8 @@ M1 主体内容开发后，bug修复列表
 |---|------|------|------|
 | 001 | 棋盘裁剪（底部 + 顶部） | ✅ 已修复 | [issue-001-board-clipping.md](issue-001-board-clipping.md) |
 | 002 | 棋子到最后一行后，可以一直左右移动，不触发下一个方块下落 | ✅ 已修复 | [issue-002-lock-reset-on-move.md](issue-002-lock-reset-on-move.md) |
+| 003 | 从Tetris返回大厅再返回Tetris点击继续游戏，不会真正的继续游戏，而是从新开了一局 | ✅ 已修复 | [issue-003-restore-starts-new-game.md](issue-003-restore-starts-new-game.md) |
+| 004 | 从大厅进入Tetris新游戏，会先显示一个方块，然后刷新为另一个方块，从顶部开始下降 | ✅ 已修复 | [issue-004-piece-flash-on-init.md](issue-004-piece-flash-on-init.md) |
 
 基于问题清单，对未处理的问题，新建 issue-xxx.md （合适的名字），到当前目录，分析问题根因以及修复建议。
 要求：

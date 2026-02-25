@@ -28,15 +28,6 @@ export default function GamePage() {
   const [countdown, setCountdown] = useState(3)
   const [isNewRecord, setIsNewRecord] = useState(false)
 
-  // 检测存档 → 决定初始 phase
-  useEffect(() => {
-    if (hasSavedState) {
-      setPhase('restore')
-    } else {
-      startCountdown()
-    }
-  }, [hasSavedState])
-
   // 游戏状态变化同步到 page phase
   useEffect(() => {
     if (state === 'paused' && phase === 'playing') {
@@ -69,6 +60,16 @@ export default function GamePage() {
 
     return () => clearInterval(timer)
   }, [start])
+
+  // 检测存档 → 决定初始 phase（仅 idle 阶段生效，避免后续 hasSavedState 变化误触发）
+  useEffect(() => {
+    if (phase !== 'idle') return
+    if (hasSavedState) {
+      setPhase('restore')
+    } else {
+      startCountdown()
+    }
+  }, [hasSavedState, phase, startCountdown])
 
   const handleResume = useCallback(() => {
     setPhase('playing')

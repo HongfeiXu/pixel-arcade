@@ -21,7 +21,7 @@ export class TetrisGame implements GameInstance {
   private score = 0
   private board: Board = createBoard()
   private currentPiece: Piece | null = null
-  private bag = new PieceBag()
+  private bag!: PieceBag
   private renderer = new TetrisRenderer()
 
   // --- 时间驱动 ---
@@ -84,7 +84,7 @@ export class TetrisGame implements GameInstance {
   }
 
   getNextPieceType(): string | null {
-    return this.bag.peek()
+    return this.bag?.peek() ?? null
   }
 
   onInput(action: GameAction): void {
@@ -131,6 +131,7 @@ export class TetrisGame implements GameInstance {
     this.board = s.board
     this.currentPiece = s.currentPiece
     this.score = s.score
+    this.bag = new PieceBag()
     this.bag.deserialize(s.bag)
     this.dropTimer = s.dropTimer
     this.lockTimer = s.lockTimer
