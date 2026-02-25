@@ -15,6 +15,7 @@ export function calcCellSize(availableWidth: number, availableHeight: number): n
 export const DROP_INTERVAL = 1000    // ms，自然下落间隔
 export const SOFT_DROP_INTERVAL = 100 // ms，软降间隔
 export const LOCK_DELAY = 500        // ms，触底后锁定延迟
+export const MAX_LOCK_MOVES = 15     // 锁定期间最大操作次数（Move Reset 规则）
 
 // --- 方块配色（tetris.md #方块配色）---
 export interface PieceColors {

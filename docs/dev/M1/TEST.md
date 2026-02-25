@@ -14,6 +14,7 @@ M1 主体内容开发后，bug修复列表
 | # | 问题 | 状态 | 详情 |
 |---|------|------|------|
 | 001 | 棋盘裁剪（底部 + 顶部） | ✅ 已修复 | [issue-001-board-clipping.md](issue-001-board-clipping.md) |
+| 002 | 棋子到最后一行后，可以一直左右移动，不触发下一个方块下落 | ✅ 已修复 | [issue-002-lock-reset-on-move.md](issue-002-lock-reset-on-move.md) |
 
 基于问题清单，对未处理的问题，新建 issue-xxx.md （合适的名字），到当前目录，分析问题根因以及修复建议。
 要求：

@@ -2,7 +2,7 @@ import type { GameInstance, GameConfig, GameAction, GameState } from '../types'
 import type { Piece, Board } from './types'
 import {
   COLS, calcCellSize,
-  DROP_INTERVAL, SOFT_DROP_INTERVAL, LOCK_DELAY,
+  DROP_INTERVAL, SOFT_DROP_INTERVAL, LOCK_DELAY, MAX_LOCK_MOVES,
   SPAWN_X, SPAWN_Y,
 } from './constants'
 import { getShape } from './pieces'
@@ -30,6 +30,7 @@ export class TetrisGame implements GameInstance {
   private dropTimer = 0
   private lockTimer = 0
   private isLocking = false
+  private lockMoves = 0
   private softDropping = false
 
   // ========== GameInstance 接口 ==========
@@ -49,6 +50,7 @@ export class TetrisGame implements GameInstance {
     this.dropTimer = 0
     this.lockTimer = 0
     this.isLocking = false
+    this.lockMoves = 0
     this.softDropping = false
     this.currentPiece = this.spawnPiece()
     this.setState('playing')
@@ -120,6 +122,7 @@ export class TetrisGame implements GameInstance {
       dropTimer: this.dropTimer,
       lockTimer: this.lockTimer,
       isLocking: this.isLocking,
+      lockMoves: this.lockMoves,
     })
   }
 
@@ -132,6 +135,7 @@ export class TetrisGame implements GameInstance {
     this.dropTimer = s.dropTimer
     this.lockTimer = s.lockTimer
     this.isLocking = s.isLocking
+    this.lockMoves = s.lockMoves ?? 0
     this.softDropping = false
     this.setState('playing')
     this.lastTime = performance.now()
@@ -190,14 +194,20 @@ export class TetrisGame implements GameInstance {
       this.currentPiece.x = newX
       this.currentPiece.y = newY
 
-      // 如果在锁定延迟期间成功移动，重置锁定计时器
+      // Move Reset 规则：锁定期间移动可重置计时器，但有次数上限
       if (this.isLocking) {
-        // 检查是否还在底部
         if (isValidPosition(this.board, this.currentPiece, this.currentPiece.x, this.currentPiece.y + 1, this.currentPiece.rotation)) {
+          // 脱离底部，取消锁定
           this.isLocking = false
           this.lockTimer = 0
+          this.lockMoves = 0
         } else {
-          this.lockTimer = 0 // 重置计时但保持锁定状态
+          this.lockMoves++
+          if (this.lockMoves >= MAX_LOCK_MOVES) {
+            this.lock()
+            return true
+          }
+          this.lockTimer = 0
         }
       }
       return true
@@ -220,12 +230,18 @@ export class TetrisGame implements GameInstance {
         piece.y += dy
         piece.rotation = newRotation
 
-        // 旋转成功，重置锁定计时
+        // Move Reset 规则：旋转也计入操作次数
         if (this.isLocking) {
           if (isValidPosition(this.board, piece, piece.x, piece.y + 1, piece.rotation)) {
             this.isLocking = false
             this.lockTimer = 0
+            this.lockMoves = 0
           } else {
+            this.lockMoves++
+            if (this.lockMoves >= MAX_LOCK_MOVES) {
+              this.lock()
+              return
+            }
             this.lockTimer = 0
           }
         }
@@ -285,6 +301,7 @@ export class TetrisGame implements GameInstance {
       // 触底，开始锁定延迟
       this.isLocking = true
       this.lockTimer = 0
+      this.lockMoves = 0
     }
   }
 
@@ -309,6 +326,7 @@ export class TetrisGame implements GameInstance {
     // 重置状态
     this.isLocking = false
     this.lockTimer = 0
+    this.lockMoves = 0
     this.dropTimer = 0
     this.softDropping = false
 
