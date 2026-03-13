@@ -24,3 +24,9 @@
 | [game-api.md](dev/game-api.md) | 游戏接口规范（GameMeta、GameInstance、GameAction） |
 | [pwa.md](dev/pwa.md) | PWA 配置（Manifest、Service Worker、iOS 适配） |
 | [deploy.md](dev/deploy.md) | 构建与部署（GitHub Pages + Actions） |
+
+## M2 迭代记录 (`dev/M2/`)
+
+| 文档 | 说明 |
+|------|------|
+| [feature-001-gamepad-redesign.md](dev/M2/feature-001-gamepad-redesign.md) | 经典手柄布局改造（D-pad + ABXY） |

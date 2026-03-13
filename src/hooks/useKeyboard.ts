@@ -10,15 +10,19 @@ interface KeyMapping {
 }
 
 const DEFAULT_KEY_MAP: Record<string, KeyMapping> = {
-  ArrowLeft:  { action: 'left',   repeat: true },
-  ArrowRight: { action: 'right',  repeat: true },
-  ArrowDown:  { action: 'down',   repeat: false },
-  ArrowUp:    { action: 'rotate', repeat: false },
-  KeyA:       { action: 'left',   repeat: true },
-  KeyD:       { action: 'right',  repeat: true },
-  KeyS:       { action: 'down',   repeat: false },
-  KeyW:       { action: 'rotate', repeat: false },
-  Space:      { action: 'drop',   repeat: false },
+  ArrowLeft:  { action: 'left',  repeat: true },
+  ArrowRight: { action: 'right', repeat: true },
+  ArrowDown:  { action: 'down',  repeat: false },
+  ArrowUp:    { action: 'up',    repeat: false },
+  KeyA:       { action: 'left',  repeat: true },
+  KeyD:       { action: 'right', repeat: true },
+  KeyS:       { action: 'down',  repeat: false },
+  KeyW:       { action: 'up',    repeat: false },
+  KeyJ:       { action: 'a',     repeat: false },
+  KeyZ:       { action: 'a',     repeat: false },
+  KeyK:       { action: 'b',     repeat: false },
+  KeyX:       { action: 'b',     repeat: false },
+  Space:      { action: 'a',     repeat: false },
 }
 
 const PAUSE_KEYS = new Set(['KeyP', 'Escape'])

@@ -50,16 +50,10 @@ interface GameInstance {
 ## 操控动作
 
 ```typescript
-type GameAction =
-  | 'left'
-  | 'right'
-  | 'down'       // 软降
-  | 'drop'       // Hard Drop
-  | 'rotate'
-  | 'pause';
+type GameAction = 'up' | 'down' | 'left' | 'right' | 'a' | 'b' | 'x' | 'y' | 'pause'
 ```
 
-不同游戏可以只响应其中部分动作，忽略不适用的。
+GameAction 采用"物理按键"而非"语义动作"，GamePad 只负责传递"按了什么"，每个游戏的 `onInput` 自行解释含义。不同游戏可以只响应其中部分动作，忽略不适用的。
 
 ## 游戏配置
 

@@ -10,49 +10,98 @@ interface GamePadProps {
 export default function GamePad({ onAction, disabled }: GamePadProps) {
   return (
     <div className={`${styles.container} ${disabled ? styles.disabled : ''}`}>
-      <div className={styles.row}>
+      {/* 左侧 D-pad */}
+      <div className={styles.dpad}>
+        <DpadButton
+          className={`${styles.dpadBtn} ${styles.dpadUp}`}
+          action="up"
+          onAction={onAction}
+          disabled={disabled}
+          label="↑"
+        />
         <RepeatButton
-          className={styles.btn}
+          className={`${styles.dpadBtn} ${styles.dpadLeft}`}
           action="left"
           onAction={onAction}
           disabled={disabled}
           label="←"
         />
-        <button
-          className={styles.btn}
-          onPointerDown={() => !disabled && onAction('rotate')}
-        >
-          旋转
-        </button>
         <RepeatButton
-          className={styles.btn}
+          className={`${styles.dpadBtn} ${styles.dpadRight}`}
           action="right"
           onAction={onAction}
           disabled={disabled}
           label="→"
         />
+        <DpadButton
+          className={`${styles.dpadBtn} ${styles.dpadDown}`}
+          action="down"
+          onAction={onAction}
+          disabled={disabled}
+          label="↓"
+        />
       </div>
-      <div className={styles.row}>
-        <button
-          className={styles.btn}
-          onPointerDown={() => !disabled && onAction('down')}
-        >
-          ↓ 软降
-        </button>
-      </div>
-      <div className={styles.row}>
-        <button
-          className={styles.btnWide}
-          onPointerDown={() => !disabled && onAction('drop')}
-        >
-          ⬇ 到底
-        </button>
+
+      {/* 右侧 ABXY */}
+      <div className={styles.abxy}>
+        <ActionButton className={`${styles.abxyBtn} ${styles.btnY}`} action="y" onAction={onAction} disabled={disabled} label="Y" />
+        <ActionButton className={`${styles.abxyBtn} ${styles.btnX}`} action="x" onAction={onAction} disabled={disabled} label="X" />
+        <ActionButton className={`${styles.abxyBtn} ${styles.btnB}`} action="b" onAction={onAction} disabled={disabled} label="B" />
+        <ActionButton className={`${styles.abxyBtn} ${styles.btnA}`} action="a" onAction={onAction} disabled={disabled} label="A" />
       </div>
     </div>
   )
 }
 
-/** 支持长按连续触发的按钮（左/右方向键） */
+/** 普通单次触发按钮（D-pad ↑ ↓） */
+function DpadButton({
+  className,
+  action,
+  onAction,
+  disabled,
+  label,
+}: {
+  className: string
+  action: GameAction
+  onAction: (action: GameAction) => void
+  disabled?: boolean
+  label: string
+}) {
+  return (
+    <button
+      className={className}
+      onPointerDown={() => !disabled && onAction(action)}
+    >
+      {label}
+    </button>
+  )
+}
+
+/** ABXY 单次触发按钮 */
+function ActionButton({
+  className,
+  action,
+  onAction,
+  disabled,
+  label,
+}: {
+  className: string
+  action: GameAction
+  onAction: (action: GameAction) => void
+  disabled?: boolean
+  label: string
+}) {
+  return (
+    <button
+      className={className}
+      onPointerDown={() => !disabled && onAction(action)}
+    >
+      {label}
+    </button>
+  )
+}
+
+/** 支持长按连续触发的按钮（D-pad ← →） */
 function RepeatButton({
   className,
   action,
@@ -77,10 +126,10 @@ function RepeatButton({
 
   const startRepeat = useCallback(() => {
     if (disabled) return
-    onAction(action) // 立即触发一次
+    onAction(action)
     timerRef.current = setInterval(() => {
       onAction(action)
-    }, 150) // 150ms 间隔连续触发
+    }, 150)
   }, [action, onAction, disabled])
 
   return (

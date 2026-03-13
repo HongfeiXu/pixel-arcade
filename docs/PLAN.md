@@ -18,6 +18,7 @@
 
 ### M2 — 打磨体验
 
+- [ ] 经典手柄布局（D-pad + ABXY）— [feature-001](dev/M2/feature-001-gamepad-redesign.md)
 - [ ] 音效系统
 - [ ] 视觉反馈动画（消行、星星飞入、震屏等）
 - [ ] 存档恢复功能

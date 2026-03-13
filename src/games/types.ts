@@ -6,7 +6,7 @@ export interface GameMeta {
   description?: string
 }
 
-export type GameAction = 'left' | 'right' | 'down' | 'drop' | 'rotate' | 'pause'
+export type GameAction = 'up' | 'down' | 'left' | 'right' | 'a' | 'b' | 'x' | 'y' | 'pause'
 
 export type GameState = 'idle' | 'playing' | 'paused' | 'over'
 

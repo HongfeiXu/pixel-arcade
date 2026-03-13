@@ -101,14 +101,12 @@ export class TetrisGame implements GameInstance {
         this.softDropping = true
         this.dropTimer = SOFT_DROP_INTERVAL // 立即触发一次下落
         break
-      case 'drop':
-        this.hardDrop()
-        break
-      case 'rotate':
+      case 'up':
+      case 'b':
         this.rotatePiece()
         break
-      case 'pause':
-        this.pause()
+      case 'a':
+        this.hardDrop()
         break
     }
   }

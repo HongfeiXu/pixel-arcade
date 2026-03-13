@@ -1,41 +1,88 @@
 .container {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
   width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
 }
 
-.row {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
+.disabled {
+  opacity: 0.4;
+  pointer-events: none;
 }
 
-.btn {
-  min-width: 56px;
-  min-height: 56px;
+/* ===== D-pad ===== */
+
+.dpad {
+  display: grid;
+  grid-template-columns: 48px 48px 48px;
+  grid-template-rows: 48px 48px 48px;
+  gap: 4px;
+}
+
+.dpadBtn {
+  width: 48px;
+  height: 48px;
+  padding: 0;
   background: #2d2d5e;
   border: 2px solid #4a4a8a;
   border-radius: 4px;
   color: #ffd600;
   font-family: 'Press Start 2P', monospace;
-  font-size: 12px;
+  font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
   user-select: none;
   -webkit-user-select: none;
+  touch-action: manipulation;
 }
 
-.btn:active {
+.dpadBtn:active {
   background: #1a1a3e;
   transform: scale(0.95);
 }
 
-.btnWide {
-  composes: btn;
-  min-width: 120px;
+.dpadUp    { grid-column: 2; grid-row: 1; }
+.dpadLeft  { grid-column: 1; grid-row: 2; }
+.dpadRight { grid-column: 3; grid-row: 2; }
+.dpadDown  { grid-column: 2; grid-row: 3; }
+
+/* ===== ABXY ===== */
+
+.abxy {
+  display: grid;
+  grid-template-columns: 48px 48px 48px;
+  grid-template-rows: 48px 48px 48px;
+  gap: 4px;
 }
+
+.abxyBtn {
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: #1A1A2E;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.abxyBtn:active {
+  filter: brightness(0.7);
+  transform: scale(0.95);
+}
+
+.btnY { grid-column: 2; grid-row: 1; background: #FFD600; }
+.btnX { grid-column: 1; grid-row: 2; background: #4488FF; }
+.btnB { grid-column: 3; grid-row: 2; background: #FF4444; }
+.btnA { grid-column: 2; grid-row: 3; background: #00E5FF; }
