@@ -43,14 +43,31 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     instance.onStateChange = (s) => { setState(s); syncNextPiece() }
 
     // 计算 GameConfig — 使用容器的实际可用尺寸
-    const config = {
-      width: container.clientWidth,
-      height: container.clientHeight,
-      devicePixelRatio: window.devicePixelRatio,
-      soundEnabled: getSoundEnabled(),
+    const canvas = canvasRef.current
+    const initCanvas = () => {
+      const config = {
+        width: container.clientWidth,
+        height: container.clientHeight,
+        devicePixelRatio: window.devicePixelRatio,
+        soundEnabled: getSoundEnabled(),
+      }
+      instance.init(canvas, config)
     }
+    initCanvas()
 
-    instance.init(canvasRef.current, config)
+    // 容器尺寸变化时重新初始化 canvas（字体加载、布局变化等）
+    let lastW = container.clientWidth
+    let lastH = container.clientHeight
+    const resizeObserver = new ResizeObserver(() => {
+      const w = container.clientWidth
+      const h = container.clientHeight
+      if (w !== lastW || h !== lastH) {
+        lastW = w
+        lastH = h
+        initCanvas()
+      }
+    })
+    resizeObserver.observe(container)
 
     // 检查存档
     const savedData = localStorage.getItem(STORAGE_PREFIX + gameId + '_state')
@@ -82,6 +99,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     window.addEventListener('pagehide', onPageHide)
 
     return () => {
+      resizeObserver.disconnect()
       document.removeEventListener('visibilitychange', onVisibilityChange)
       window.removeEventListener('pagehide', onPageHide)
       // 卸载时保存进度（paused 状态说明还在玩，需要存档）
