@@ -1,0 +1,41 @@
+.banner {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2d2d5e;
+  border: 2px solid #4a4a8a;
+  border-radius: 4px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  color: #ffd600;
+  z-index: 9999;
+  white-space: nowrap;
+}
+
+.btn {
+  background: #ffd600;
+  color: #1a1a2e;
+  border: none;
+  border-radius: 2px;
+  font-family: inherit;
+  font-size: 10px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.btn:active {
+  opacity: 0.8;
+}
+
+.close {
+  background: none;
+  border: none;
+  color: #4a4a8a;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0 2px;
+}
