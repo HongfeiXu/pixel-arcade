@@ -29,6 +29,8 @@ export const PIECE_COLORS: Record<PieceType, PieceColors> = {
   O: { main: '#FFD600', light: '#FFE24C', dark: '#B39600' },
   T: { main: '#AA00FF', light: '#C44CFF', dark: '#7700B3' },
   L: { main: '#FF9100', light: '#FFB24C', dark: '#B36600' },
+  S: { main: '#00E676', light: '#4CEF9C', dark: '#00A152' },
+  Z: { main: '#FF1744', light: '#FF5C7A', dark: '#B31030' },
   J: { main: '#2979FF', light: '#69A1FF', dark: '#1D55B3' },
 }
 

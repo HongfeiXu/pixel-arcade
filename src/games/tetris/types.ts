@@ -1,4 +1,4 @@
-export type PieceType = 'I' | 'O' | 'T' | 'L' | 'J'
+export type PieceType = 'I' | 'O' | 'T' | 'S' | 'Z' | 'L' | 'J'
 
 export interface Piece {
   type: PieceType

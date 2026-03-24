@@ -117,6 +117,62 @@ export const PIECE_SHAPES: Record<PieceType, Shape[]> = {
     ],
   ],
 
+  // S 型 — 3×3
+  S: [
+    // 0°
+    [
+      [false, true,  true],
+      [true,  true, false],
+      [false, false, false],
+    ],
+    // 90°
+    [
+      [false, true, false],
+      [false, true,  true],
+      [false, false, true],
+    ],
+    // 180°
+    [
+      [false, false, false],
+      [false, true,  true],
+      [true,  true, false],
+    ],
+    // 270°
+    [
+      [true, false, false],
+      [true,  true, false],
+      [false, true, false],
+    ],
+  ],
+
+  // Z 型 — 3×3
+  Z: [
+    // 0°
+    [
+      [true,  true, false],
+      [false, true,  true],
+      [false, false, false],
+    ],
+    // 90°
+    [
+      [false, false, true],
+      [false, true,  true],
+      [false, true, false],
+    ],
+    // 180°
+    [
+      [false, false, false],
+      [true,  true, false],
+      [false, true,  true],
+    ],
+    // 270°
+    [
+      [false, true, false],
+      [true,  true, false],
+      [true, false, false],
+    ],
+  ],
+
   // J 型 — 3×3
   J: [
     // 0°
@@ -153,4 +209,4 @@ export function getShape(type: PieceType, rotation: number): Shape {
 }
 
 /** 获取方块类型列表（用于 bag 算法） */
-export const ALL_PIECE_TYPES: PieceType[] = ['I', 'O', 'T', 'L', 'J']
+export const ALL_PIECE_TYPES: PieceType[] = ['I', 'O', 'T', 'S', 'Z', 'L', 'J']
