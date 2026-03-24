@@ -84,6 +84,11 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     return () => {
       document.removeEventListener('visibilitychange', onVisibilityChange)
       window.removeEventListener('pagehide', onPageHide)
+      // 卸载时保存进度（paused 状态说明还在玩，需要存档）
+      const s = instance.getState()
+      if (s === 'playing' || s === 'paused') {
+        saveGameState(instance, gameId)
+      }
       instance.destroy()
       instanceRef.current = null
     }
