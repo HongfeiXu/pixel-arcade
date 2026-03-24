@@ -6,7 +6,7 @@ import {
   SPAWN_X, SPAWN_Y,
 } from './constants'
 import { getShape } from './pieces'
-import { createBoard, isValidPosition, lockPiece, clearLines, isGameOver, getGhostY } from './board'
+import { createBoard, isValidPosition, lockPiece, clearLines, isGameOver } from './board'
 import { PieceBag } from './bag'
 import { TetrisRenderer } from './renderer'
 
@@ -92,21 +92,21 @@ export class TetrisGame implements GameInstance {
 
     switch (action) {
       case 'left':
+      case 'x':
         this.movePiece(-1, 0)
         break
       case 'right':
+      case 'b':
         this.movePiece(1, 0)
         break
       case 'down':
+      case 'a':
         this.softDropping = true
         this.dropTimer = SOFT_DROP_INTERVAL // 立即触发一次下落
         break
       case 'up':
-      case 'b':
+      case 'y':
         this.rotatePiece()
-        break
-      case 'a':
-        this.hardDrop()
         break
     }
   }
@@ -302,12 +302,6 @@ export class TetrisGame implements GameInstance {
       this.lockTimer = 0
       this.lockMoves = 0
     }
-  }
-
-  private hardDrop(): void {
-    if (!this.currentPiece) return
-    this.currentPiece.y = getGhostY(this.board, this.currentPiece)
-    this.lock()
   }
 
   private lock(): void {
