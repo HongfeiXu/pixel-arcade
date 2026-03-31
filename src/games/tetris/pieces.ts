@@ -208,5 +208,8 @@ export function getShape(type: PieceType, rotation: number): Shape {
   return shapes[rotation % shapes.length]
 }
 
-/** 获取方块类型列表（用于 bag 算法） */
+/** 全部 7 种方块（用于 bag 算法） */
 export const ALL_PIECE_TYPES: PieceType[] = ['I', 'O', 'T', 'S', 'Z', 'L', 'J']
+
+/** 简单版 5 种方块（去掉 S/Z） */
+export const EASY_PIECE_TYPES: PieceType[] = ['I', 'O', 'T', 'L', 'J']

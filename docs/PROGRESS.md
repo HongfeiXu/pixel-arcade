@@ -12,3 +12,13 @@
 - **游戏大厅**：最高分显示、音效开关、卡片交互（抖动动画）
 - **PWA 完善**：占位图标、meta 标签、离线 precache
 - **部署配置**：GitHub Actions 工作流（push master → 自动构建部署）
+
+## 当前阶段：M2 — 打磨体验 🚧
+
+### 已完成
+
+- **经典手柄布局**：D-pad + ABXY 经典手柄重构
+- **XYAB 键映射**：XYAB 映射为方向键，移除硬降操作
+- **S/Z 型方块**：补全标准 7 种方块
+- **背景音乐**：`useBgm` Hook，倒计时和游戏中循环播放，暂停/结束时暂停，iOS 首次手势恢复播放，音频文件 `public/audio/bgm-pixel-balloons.ogg`，workbox 缓存支持
+- **宽屏适配**：Home 和 GamePage 容器 `max-width: 480px; margin: 0 auto`，桌面端居中显示

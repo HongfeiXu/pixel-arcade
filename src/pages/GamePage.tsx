@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { gameRegistry } from '../games/registry'
 import { useGame } from '../hooks/useGame'
 import { useKeyboard } from '../hooks/useKeyboard'
+import { useBgm } from '../hooks/useBgm'
 import GamePad from '../components/GamePad'
 import ScoreBoard from '../components/ScoreBoard'
 import NextPiecePreview from '../components/NextPiecePreview'
@@ -116,6 +117,9 @@ export default function GamePage() {
     onPauseToggle: handlePauseBtn,
     enabled: phase === 'playing',
   })
+
+  // 背景音乐：倒计时和游戏中播放，其余暂停
+  useBgm(phase === 'countdown' || phase === 'playing')
 
   const handleRestoreLoad = useCallback(() => {
     loadSaved()

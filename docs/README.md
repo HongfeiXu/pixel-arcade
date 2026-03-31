@@ -25,6 +25,12 @@
 | [pwa.md](dev/pwa.md) | PWA 配置（Manifest、Service Worker、iOS 适配） |
 | [deploy.md](dev/deploy.md) | 构建与部署（GitHub Pages + Actions） |
 
+## 素材资源 (`art/`)
+
+| 文档 | 说明 |
+|------|------|
+| [audio.md](art/audio.md) | 音频资源（BGM、音效来源与用途） |
+
 ## M2 迭代记录 (`dev/M2/`)
 
 | 文档 | 说明 |

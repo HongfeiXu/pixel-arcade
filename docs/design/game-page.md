@@ -56,6 +56,18 @@ Canvas 仅包含纯棋盘（不含 HUD），棋盘逻辑高度由具体游戏决
 
 "下一个"方块预览和计分由 React 顶栏组件承载，不占用 Canvas 空间。
 
+### 宽屏适配
+
+容器设置 `max-width: 480px; margin: 0 auto`，在桌面浏览器上居中显示，保持手机端比例。
+
+## 背景音乐（BGM）
+
+- 音频文件：`public/audio/bgm-pixel-balloons.ogg`
+- 通过 `useBgm(playing)` Hook 控制，倒计时和游戏进行中播放，其余阶段暂停
+- 循环播放，音量 30%
+- 尊重大厅"音效"开关（`soundEnabled`）
+- iOS 兼容：`play()` 失败静默处理，监听首次 `touchstart` 恢复播放
+
 ## 用户流程
 
 ### 1. 进入页面

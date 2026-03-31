@@ -12,6 +12,10 @@ https://hongfeixu.github.io/pixel-arcade/
 |------|------|
 | 俄罗斯方块 | 🚧 开发中 |
 
+## 致谢
+
+- 背景音乐 *Pixel Balloons_v2_LoFi* 来自 [SoundImage.org](https://soundimage.org/puzzle-music-8/)
+
 ## 文档
 
 [docs/README.md](docs/README.md) — 完整文档索引 · [PLAN.md](docs/PLAN.md) — 路线图 · [PROGRESS.md](docs/PROGRESS.md) — 开发进度

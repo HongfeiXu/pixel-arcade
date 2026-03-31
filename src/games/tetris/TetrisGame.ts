@@ -1,20 +1,27 @@
 import type { GameInstance, GameConfig, GameAction, GameState } from '../types'
-import type { Piece, Board } from './types'
+import type { Piece, Board, PieceType } from './types'
 import {
   COLS, calcCellSize,
   DROP_INTERVAL, SOFT_DROP_INTERVAL, LOCK_DELAY, MAX_LOCK_MOVES,
   SPAWN_X, SPAWN_Y,
 } from './constants'
-import { getShape } from './pieces'
+import { ALL_PIECE_TYPES, getShape } from './pieces'
 import { createBoard, isValidPosition, lockPiece, clearLines, isGameOver } from './board'
 import { PieceBag } from './bag'
 import { TetrisRenderer } from './renderer'
+
+export interface TetrisOptions {
+  pieceTypes?: PieceType[]
+}
 
 export class TetrisGame implements GameInstance {
   // --- GameInstance 回调 ---
   onScoreChange?: (score: number) => void
   onGameOver?: (finalScore: number) => void
   onStateChange?: (state: GameState) => void
+
+  // --- 配置 ---
+  private pieceTypes: PieceType[]
 
   // --- 内部状态 ---
   private state: GameState = 'idle'
@@ -23,6 +30,10 @@ export class TetrisGame implements GameInstance {
   private currentPiece: Piece | null = null
   private bag!: PieceBag
   private renderer = new TetrisRenderer()
+
+  constructor(options?: TetrisOptions) {
+    this.pieceTypes = options?.pieceTypes ?? ALL_PIECE_TYPES
+  }
 
   // --- 时间驱动 ---
   private rafId = 0
@@ -46,7 +57,7 @@ export class TetrisGame implements GameInstance {
   start(): void {
     this.board = createBoard()
     this.score = 0
-    this.bag = new PieceBag()
+    this.bag = new PieceBag(this.pieceTypes)
     this.dropTimer = 0
     this.lockTimer = 0
     this.isLocking = false
@@ -129,7 +140,7 @@ export class TetrisGame implements GameInstance {
     this.board = s.board
     this.currentPiece = s.currentPiece
     this.score = s.score
-    this.bag = new PieceBag()
+    this.bag = new PieceBag(this.pieceTypes)
     this.bag.deserialize(s.bag)
     this.dropTimer = s.dropTimer
     this.lockTimer = s.lockTimer
