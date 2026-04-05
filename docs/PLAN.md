@@ -21,8 +21,10 @@
 - [x] 经典手柄布局（D-pad + ABXY）— [feature-001](dev/M2/feature-001-gamepad-redesign.md)
 - [x] 背景音乐（BGM 循环播放，跟随游戏状态暂停/恢复）
 - [x] 宽屏适配（max-width 480px 居中，防止桌面端布局失控）
+- [x] 进度本地记录（暂停返回大厅后，再进游戏恢复到暂停时的状态）
+- [x] 最高分实时更新（游戏中超过最高分时立即刷新，不等结束）— [feature-002](dev/M2/feature-002-realtime-highscore.md)
 - [ ] 音效系统（按键、消行、Game Over 等短音效）
-- [ ] 视觉反馈动画（消行、星星飞入、震屏等）
+- [x] 视觉反馈动画（消行闪白、震屏）— [feature-003](dev/M2/feature-003-visual-feedback.md)
 - [ ] iOS 启动画面 & 图标
 
 ### M3 — 第二个游戏

@@ -10,6 +10,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
   const [state, setState] = useState<GameState>('idle')
   const [score, setScore] = useState(0)
   const [nextPiece, setNextPiece] = useState<string | null>(null)
+  const [highScore, setHighScore] = useState(0)
   const [hasSavedState, setHasSavedState] = useState(false)
   const [savedScore, setSavedScore] = useState(0)
 
@@ -26,17 +27,25 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
       setNextPiece(instance.getNextPieceType?.() ?? null)
     }
 
+    // 读取历史最高分
+    const initHighScore = readHighScore(gameId)
+    setHighScore(initHighScore)
+
     // 注册回调
-    instance.onScoreChange = (s) => { setScore(s); syncNextPiece() }
-    instance.onGameOver = (finalScore) => {
+    instance.onScoreChange = (s) => {
+      setScore(s)
+      syncNextPiece()
+      // 实时更新最高分
+      setHighScore((prev) => {
+        if (s > prev) {
+          writeHighScore(gameId, s)
+          return s
+        }
+        return prev
+      })
+    }
+    instance.onGameOver = () => {
       setState('over')
-      // 更新最高分
-      const scoresJson = localStorage.getItem(STORAGE_PREFIX + 'scores')
-      const scores = scoresJson ? JSON.parse(scoresJson) : {}
-      if (!scores[gameId] || finalScore > scores[gameId]) {
-        scores[gameId] = finalScore
-        localStorage.setItem(STORAGE_PREFIX + 'scores', JSON.stringify(scores))
-      }
       // 清除存档
       localStorage.removeItem(STORAGE_PREFIX + gameId + '_state')
     }
@@ -133,6 +142,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     localStorage.removeItem(STORAGE_PREFIX + gameId + '_state')
     setHasSavedState(false)
     setScore(0)
+    setHighScore(readHighScore(gameId))
     instanceRef.current?.start()
   }, [gameId])
 
@@ -162,6 +172,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     canvasRef,
     state,
     score,
+    highScore,
     nextPiece,
     hasSavedState,
     savedScore,
@@ -173,6 +184,23 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     loadSaved,
     clearSave,
   }
+}
+
+function readHighScore(gameId: string): number {
+  try {
+    const scores = JSON.parse(localStorage.getItem(STORAGE_PREFIX + 'scores') || '{}')
+    return scores[gameId] ?? 0
+  } catch {
+    return 0
+  }
+}
+
+function writeHighScore(gameId: string, score: number): void {
+  try {
+    const scores = JSON.parse(localStorage.getItem(STORAGE_PREFIX + 'scores') || '{}')
+    scores[gameId] = score
+    localStorage.setItem(STORAGE_PREFIX + 'scores', JSON.stringify(scores))
+  } catch { /* ignore */ }
 }
 
 function saveGameState(instance: GameInstance, gameId: string): void {

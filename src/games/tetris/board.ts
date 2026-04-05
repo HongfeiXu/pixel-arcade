@@ -49,19 +49,32 @@ export function lockPiece(board: Board, piece: Piece): void {
   }
 }
 
-/** 消除已满的行，返回消除的行数 */
-export function clearLines(board: Board): number {
-  let cleared = 0
+/** 找出所有满行的行号（从下到上） */
+export function findFullRows(board: Board): number[] {
+  const rows: number[] = []
   for (let row = ROWS - 1; row >= 0; row--) {
     if (board[row].every((cell) => cell !== null)) {
-      // 移除该行，顶部补空行
-      board.splice(row, 1)
-      board.unshift(Array.from<Cell>({ length: COLS }).fill(null))
-      cleared++
-      row++ // 重新检查当前位置（因为上方行下移了）
+      rows.push(row)
     }
   }
-  return cleared
+  return rows
+}
+
+/** 移除指定行，顶部补空行 */
+export function removeRows(board: Board, rows: number[]): void {
+  // 从大到小排序，保证 splice 索引正确
+  const sorted = [...rows].sort((a, b) => b - a)
+  for (const row of sorted) {
+    board.splice(row, 1)
+    board.unshift(Array.from<Cell>({ length: COLS }).fill(null))
+  }
+}
+
+/** 消除已满的行，返回消除的行数 */
+export function clearLines(board: Board): number {
+  const rows = findFullRows(board)
+  if (rows.length > 0) removeRows(board, rows)
+  return rows.length
 }
 
 /** 判断游戏是否结束：新方块在生成位置已被占据 */

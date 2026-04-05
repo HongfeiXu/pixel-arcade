@@ -27,24 +27,34 @@ export class TetrisRenderer {
     this.ctx.imageSmoothingEnabled = false
   }
 
-  render(board: Board, currentPiece: Piece | null): void {
+  render(
+    board: Board,
+    currentPiece: Piece | null,
+    animRows?: number[],
+    animFlashOn?: boolean,
+    shake?: { x: number; y: number },
+  ): void {
     const ctx = this.ctx
-    const cs = this.cellSize
     const canvasW = ctx.canvas.width / this.dpr
     const canvasH = ctx.canvas.height / this.dpr
 
     // 清空整个 Canvas
     ctx.clearRect(0, 0, canvasW, canvasH)
 
+    ctx.save()
+    if (shake) {
+      ctx.translate(shake.x, shake.y)
+    }
+
     // 棋盘背景
     ctx.fillStyle = COLOR_BOARD_BG
-    ctx.fillRect(0, 0, COLS * cs, ROWS * cs)
+    ctx.fillRect(0, 0, COLS * this.cellSize, ROWS * this.cellSize)
 
     // 网格线
     this.drawGrid()
 
     // 已锁定方块
-    this.drawBoard(board)
+    this.drawBoard(board, animRows, animFlashOn)
 
     // Ghost Piece
     if (currentPiece) {
@@ -55,6 +65,8 @@ export class TetrisRenderer {
     if (currentPiece) {
       this.drawPiece(currentPiece, 1)
     }
+
+    ctx.restore()
   }
 
   private drawGrid(): void {
@@ -80,12 +92,18 @@ export class TetrisRenderer {
     }
   }
 
-  private drawBoard(board: Board): void {
+  private static readonly FLASH_COLORS = {
+    main: '#FFFFFF', light: '#FFFFFF', dark: '#CCCCCC',
+  }
+
+  private drawBoard(board: Board, animRows?: number[], animFlashOn?: boolean): void {
+    const flashRowSet = animRows ? new Set(animRows) : undefined
     for (let row = 0; row < ROWS; row++) {
       for (let col = 0; col < COLS; col++) {
         const cell = board[row][col]
         if (cell) {
-          this.drawCell(col, row, PIECE_COLORS[cell])
+          const isFlashing = flashRowSet?.has(row) && animFlashOn
+          this.drawCell(col, row, isFlashing ? TetrisRenderer.FLASH_COLORS : PIECE_COLORS[cell])
         }
       }
     }

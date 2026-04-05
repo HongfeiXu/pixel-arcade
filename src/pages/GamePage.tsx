@@ -19,7 +19,7 @@ export default function GamePage() {
   const canvasAreaRef = useRef<HTMLDivElement>(null)
 
   const {
-    canvasRef, state, score, nextPiece,
+    canvasRef, state, score, highScore, nextPiece,
     hasSavedState, savedScore,
     start, pause, resume, restart,
     handleAction, loadSaved, clearSave,
@@ -28,6 +28,12 @@ export default function GamePage() {
   const [phase, setPhase] = useState<PagePhase>('idle')
   const [countdown, setCountdown] = useState(3)
   const [isNewRecord, setIsNewRecord] = useState(false)
+  const initialHighScoreRef = useRef(0)
+
+  // 记录进入游戏时的历史最高分，用于判断新纪录
+  useEffect(() => {
+    initialHighScoreRef.current = highScore
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // 游戏状态变化同步到 page phase
   useEffect(() => {
@@ -35,13 +41,10 @@ export default function GamePage() {
       setPhase('paused')
     }
     if (state === 'over' && phase !== 'over') {
-      // 检查是否新纪录
-      const scoresJson = localStorage.getItem('pixelarcade_scores')
-      const scores = scoresJson ? JSON.parse(scoresJson) : {}
-      setIsNewRecord(scores[id!] === score && score > 0)
+      setIsNewRecord(score > 0 && score > initialHighScoreRef.current)
       setPhase('over')
     }
-  }, [state, phase, id, score])
+  }, [state, phase, score])
 
   const startCountdown = useCallback(() => {
     setPhase('countdown')
@@ -148,7 +151,7 @@ export default function GamePage() {
       <header className={styles.topBar}>
         <button className={styles.iconBtn} onClick={handleBack}>←</button>
         <NextPiecePreview pieceType={nextPiece} />
-        <ScoreBoard score={score} />
+        <ScoreBoard score={score} highScore={highScore} />
         <button className={styles.iconBtn} onClick={handlePauseBtn}>
           {state === 'paused' ? '▶' : '⏸'}
         </button>

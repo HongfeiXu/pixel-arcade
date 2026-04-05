@@ -1,15 +1,29 @@
 .container {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
 }
 
-.star {
-  font-size: 16px;
+.star,
+.trophy {
+  font-size: 14px;
 }
 
 .score {
   font-family: 'Press Start 2P', monospace;
-  font-size: 16px;
+  font-size: 14px;
   color: #ffd600;
+}
+
+.separator {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: #4a4a8a;
+  margin: 0 2px;
+}
+
+.highScore {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  color: #00e5ff;
 }

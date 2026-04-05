@@ -6,7 +6,7 @@ import {
   SPAWN_X, SPAWN_Y,
 } from './constants'
 import { ALL_PIECE_TYPES, getShape } from './pieces'
-import { createBoard, isValidPosition, lockPiece, clearLines, isGameOver } from './board'
+import { createBoard, isValidPosition, lockPiece, findFullRows, removeRows, isGameOver } from './board'
 import { PieceBag } from './bag'
 import { TetrisRenderer } from './renderer'
 
@@ -43,6 +43,18 @@ export class TetrisGame implements GameInstance {
   private isLocking = false
   private lockMoves = 0
   private softDropping = false
+
+  // --- 消行动画 ---
+  private animating = false
+  private animRows: number[] = []
+  private animTimer = 0
+  // 闪烁时序：on(60) off(60) on(60) off(60) on(80) = 总 320ms
+  private static readonly ANIM_PHASES = [60, 60, 60, 60, 80]
+  private static readonly ANIM_TOTAL = 320
+
+  // --- 震屏 ---
+  private shakeTimer = 0
+  private shakeIntensity = 0
 
   // ========== GameInstance 接口 ==========
 
@@ -99,7 +111,7 @@ export class TetrisGame implements GameInstance {
   }
 
   onInput(action: GameAction): void {
-    if (this.state !== 'playing' || !this.currentPiece) return
+    if (this.state !== 'playing' || !this.currentPiece || this.animating) return
 
     switch (action) {
       case 'left':
@@ -168,6 +180,12 @@ export class TetrisGame implements GameInstance {
   }
 
   private update(delta: number): void {
+    // 消行动画期间跳过正常下落逻辑
+    if (this.animating) {
+      this.updateAnimation(delta)
+      return
+    }
+
     if (!this.currentPiece) return
 
     const dropInterval = this.softDropping ? SOFT_DROP_INTERVAL : DROP_INTERVAL
@@ -186,6 +204,37 @@ export class TetrisGame implements GameInstance {
         this.dropOne()
       }
     }
+  }
+
+  private updateAnimation(delta: number): void {
+    this.animTimer += delta
+
+    // 震屏衰减
+    if (this.shakeTimer > 0) {
+      this.shakeTimer = Math.max(0, this.shakeTimer - delta)
+    }
+
+    // 动画结束
+    if (this.animTimer >= TetrisGame.ANIM_TOTAL) {
+      this.animating = false
+      this.score += this.animRows.length
+      this.onScoreChange?.(this.score)
+      removeRows(this.board, this.animRows)
+      this.animRows = []
+      this.shakeTimer = 0
+      this.shakeIntensity = 0
+      this.afterClear()
+    }
+  }
+
+  /** 判断当前动画帧是否处于闪白阶段（奇数段 = 原色，偶数段 = 闪白） */
+  private isAnimFlashOn(): boolean {
+    let elapsed = 0
+    for (let i = 0; i < TetrisGame.ANIM_PHASES.length; i++) {
+      elapsed += TetrisGame.ANIM_PHASES[i]
+      if (this.animTimer < elapsed) return i % 2 === 0 // 0,2,4 = 闪白
+    }
+    return false
   }
 
   // ========== 方块操作 ==========
@@ -320,21 +369,34 @@ export class TetrisGame implements GameInstance {
 
     lockPiece(this.board, this.currentPiece)
 
-    // 消行
-    const cleared = clearLines(this.board)
-    if (cleared > 0) {
-      this.score += cleared
-      this.onScoreChange?.(this.score)
-    }
+    // 检测满行
+    const fullRows = findFullRows(this.board)
 
-    // 重置状态
+    // 重置锁定状态
     this.isLocking = false
     this.lockTimer = 0
     this.lockMoves = 0
     this.dropTimer = 0
     this.softDropping = false
 
-    // 生成新方块
+    if (fullRows.length > 0) {
+      // 进入动画阶段
+      this.animating = true
+      this.animRows = fullRows
+      this.animTimer = 0
+      this.currentPiece = null // 动画期间隐藏当前方块
+      // 震屏：2 行以上触发
+      if (fullRows.length >= 2) {
+        this.shakeIntensity = fullRows.length // 2~4px
+        this.shakeTimer = 150 + fullRows.length * 50
+      }
+    } else {
+      this.afterClear()
+    }
+  }
+
+  /** 消行（或无消行）后的收尾：生成新方块或 Game Over */
+  private afterClear(): void {
     const newPiece = this.spawnPiece()
     if (isGameOver(this.board, newPiece)) {
       this.currentPiece = null
@@ -355,6 +417,23 @@ export class TetrisGame implements GameInstance {
   }
 
   private renderFrame(): void {
-    this.renderer.render(this.board, this.currentPiece)
+    // 计算震屏偏移
+    let shake: { x: number; y: number } | undefined
+    if (this.shakeTimer > 0 && this.shakeIntensity > 0) {
+      const t = this.shakeTimer / (150 + this.shakeIntensity * 50)
+      const intensity = this.shakeIntensity * t
+      shake = {
+        x: (Math.random() * 2 - 1) * intensity,
+        y: (Math.random() * 2 - 1) * intensity,
+      }
+    }
+
+    this.renderer.render(
+      this.board,
+      this.currentPiece,
+      this.animating ? this.animRows : undefined,
+      this.animating ? this.isAnimFlashOn() : undefined,
+      shake,
+    )
   }
 }

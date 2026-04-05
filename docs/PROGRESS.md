@@ -22,3 +22,6 @@
 - **S/Z 型方块**：补全标准 7 种方块
 - **背景音乐**：`useBgm` Hook，倒计时和游戏中循环播放，暂停/结束时暂停，iOS 首次手势恢复播放，音频文件 `public/audio/bgm-pixel-balloons.ogg`，workbox 缓存支持
 - **宽屏适配**：Home 和 GamePage 容器 `max-width: 480px; margin: 0 auto`，桌面端居中显示
+- **进度本地记录**：暂停/离开时自动存档到 localStorage，再进游戏可恢复到暂停时状态
+- **最高分实时更新**：ScoreBoard 同时显示当前分（⭐）和最高分（🏆），超分时实时写入 localStorage
+- **视觉反馈动画**：消行 GB 风格闪白 3 次（~320ms），消 2 行以上触发震屏效果，动画期间暂停输入和下落
