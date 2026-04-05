@@ -65,9 +65,9 @@ export default function GamePage() {
     return () => clearInterval(timer)
   }, [start])
 
-  // 检测存档 → 决定初始 phase（仅 idle 阶段生效，避免后续 hasSavedState 变化误触发）
+  // 检测存档 → 决定初始 phase（等 hasSavedState 从 null 变为确定值后再决策）
   useEffect(() => {
-    if (phase !== 'idle') return
+    if (phase !== 'idle' || hasSavedState === null) return
     if (hasSavedState) {
       setPhase('restore')
     } else {

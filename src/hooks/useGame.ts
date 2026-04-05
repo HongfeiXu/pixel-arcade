@@ -11,7 +11,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
   const [score, setScore] = useState(0)
   const [nextPiece, setNextPiece] = useState<string | null>(null)
   const [highScore, setHighScore] = useState(0)
-  const [hasSavedState, setHasSavedState] = useState(false)
+  const [hasSavedState, setHasSavedState] = useState<boolean | null>(null)
   const [savedScore, setSavedScore] = useState(0)
 
   // 初始化
@@ -88,6 +88,8 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
       } catch {
         setSavedScore(0)
       }
+    } else {
+      setHasSavedState(false)
     }
 
     // visibilitychange 监听
