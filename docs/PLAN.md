@@ -25,7 +25,7 @@
 - [x] 最高分实时更新（游戏中超过最高分时立即刷新，不等结束）— [feature-002](dev/M2/feature-002-realtime-highscore.md)
 - [ ] 音效系统（按键、消行、Game Over 等短音效）
 - [x] 视觉反馈动画（消行闪白、震屏）— [feature-003](dev/M2/feature-003-visual-feedback.md)
-- [ ] iOS 启动画面 & 图标
+- [x] iOS 启动画面 & 图标
 
 ### M3 — 第二个游戏
 
