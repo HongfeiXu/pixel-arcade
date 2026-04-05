@@ -62,10 +62,12 @@ export function findFullRows(board: Board): number[] {
 
 /** 移除指定行，顶部补空行 */
 export function removeRows(board: Board, rows: number[]): void {
-  // 从大到小排序，保证 splice 索引正确
+  // 从大到小排序，先全部删除再统一补空行，避免 splice/unshift 交替导致索引偏移
   const sorted = [...rows].sort((a, b) => b - a)
   for (const row of sorted) {
     board.splice(row, 1)
+  }
+  for (let i = 0; i < sorted.length; i++) {
     board.unshift(Array.from<Cell>({ length: COLS }).fill(null))
   }
 }
