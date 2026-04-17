@@ -94,6 +94,6 @@ export default defineConfig({
 重大更新（如新增游戏）时打 Git Tag：
 
 ```bash
-git tag v1.1.0 -m "feat: 添加贪吃蛇游戏"
+git tag v1.1.0 -m "feat: 添加反重力方块"
 git push origin v1.1.0
 ```

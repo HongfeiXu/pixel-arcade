@@ -32,6 +32,7 @@ interface GameInstance {
   // 状态
   getState(): 'idle' | 'playing' | 'paused' | 'over';
   getScore(): number;
+  getNextPieceType?(): string | null;
 
   // 操控输入
   onInput(action: GameAction): void;
@@ -40,6 +41,7 @@ interface GameInstance {
   onScoreChange?: (score: number) => void;
   onGameOver?: (finalScore: number) => void;
   onStateChange?: (state: 'idle' | 'playing' | 'paused' | 'over') => void;
+  onSfx?: (event: SfxEvent) => void;
 
   // 存档（仅负责序列化/反序列化，不直接读写 localStorage）
   saveState(): string;            // 将当前状态序列化为 JSON 字符串
@@ -54,6 +56,22 @@ type GameAction = 'up' | 'down' | 'left' | 'right' | 'a' | 'b' | 'x' | 'y' | 'pa
 ```
 
 GameAction 采用"物理按键"而非"语义动作"，GamePad 只负责传递"按了什么"，每个游戏的 `onInput` 自行解释含义。不同游戏可以只响应其中部分动作，忽略不适用的。
+
+## 音效事件
+
+```typescript
+type SfxEvent =
+  | 'move'
+  | 'rotate'
+  | 'softDrop'
+  | 'lineClear'
+  | 'tetris'
+  | 'gameOver'
+```
+
+GameInstance 只通过 `onSfx` 抛出语义事件，不直接加载或播放音频。`useGame` 将事件桥接给 `useSfx`，由 React 侧统一处理音效开关、预加载和播放。
+
+`softDrop` 表示"沿当前游戏重力方向加速"：标准俄罗斯方块中是向下软降，反重力方块中是向上速升。
 
 ## 游戏配置
 
@@ -72,6 +90,7 @@ interface GameConfig {
 
 ```typescript
 import { TetrisGame } from './tetris/TetrisGame';
+import { AntiGravityGame } from './anti-gravity/AntiGravityGame';
 
 export const gameRegistry: GameEntry[] = [
   {
@@ -83,7 +102,15 @@ export const gameRegistry: GameEntry[] = [
     },
     createInstance: () => new TetrisGame(),
   },
-  // 后续新游戏在此追加
+  {
+    meta: {
+      id: 'anti-gravity',
+      name: '反重力方块',
+      icon: '',
+      status: 'active',
+    },
+    createInstance: () => new AntiGravityGame(),
+  },
 ];
 ```
 
@@ -105,5 +132,5 @@ export const gameRegistry: GameEntry[] = [
 1. 在 `src/games/` 下新建游戏目录
 2. 实现 `GameInstance` 接口
 3. 在 `registry.ts` 注册
-4. 在 `docs/design/` 添加设计文档
-5. 完成
+4. 按需添加 `docs/design/` 或 `docs/dev/Mx/feature-xxx.md` 设计文档
+5. 更新 `docs/PLAN.md`、`docs/PROGRESS.md` 和文档索引

@@ -1,10 +1,10 @@
 # 开发进度
 
-## 当前阶段：M1 — 基础设施 + 首个游戏 ✅
+## M1 — 基础设施 + 首个游戏 ✅
 
 ### 已完成
 
-- **项目初始化**：Vite + React 18 + TypeScript 脚手架搭建
+- **项目初始化**：Vite + React 19 + TypeScript 脚手架搭建
 - **设计文档**：完成俄罗斯方块玩法、视觉规范、游戏接口、页面设计、技术架构、PWA、部署方案
 - **俄罗斯方块核心引擎**：纯 TS 实现（棋盘逻辑、方块旋转/Wall Kick、5-bag 随机、Canvas 渲染、Ghost Piece）
 - **useGame Hook + GamePage 集成**：完整生命周期管理、覆盖层系统（倒计时/暂停/游戏结束/存档恢复/退出确认）
@@ -13,7 +13,7 @@
 - **PWA 完善**：占位图标、meta 标签、离线 precache
 - **部署配置**：GitHub Actions 工作流（push master → 自动构建部署）
 
-## 当前阶段：M2 — 打磨体验 🚧
+## M2 — 打磨体验 ✅
 
 ### 已完成
 
@@ -24,5 +24,16 @@
 - **宽屏适配**：Home 和 GamePage 容器 `max-width: 480px; margin: 0 auto`，桌面端居中显示
 - **进度本地记录**：暂停/离开时自动存档到 localStorage，再进游戏可恢复到暂停时状态
 - **最高分实时更新**：ScoreBoard 同时显示当前分（⭐）和最高分（🏆），超分时实时写入 localStorage
+- **音效系统**：移动、旋转、速降/速升、消行、四消、Game Over 短音效，使用 Web Audio API 预加载并支持重叠播放
 - **视觉反馈动画**：消行 GB 风格闪白 3 次（~320ms），消 2 行以上触发震屏效果，动画期间暂停输入和下落
 - **iOS 启动画面**：6 种设备分辨率启动图（#1A1A2E 背景 + 棋盘格图标 + 像素游戏厅文字），`apple-touch-startup-image` meta 标签
+
+## M3 — 第二个游戏 ✅
+
+### 已完成
+
+- **反重力方块设计**：完成 [feature-005](dev/M3/feature-005-anti-gravity.md)，明确底部生成、向上移动、输入映射、隐藏区、消行方向和验证清单
+- **共享 Tetromino 模块**：抽出 `src/games/shared/tetromino/`，复用方块类型、形状定义和随机袋
+- **反重力方块核心引擎**：新增 `src/games/anti-gravity/`，实现向上移动、触顶锁定、底部隐藏区、向上 Ghost Piece、反向消行补空
+- **游戏大厅接入**：注册 `anti-gravity`，大厅显示第三款游戏，最高分和存档使用独立 `gameId`
+- **验收**：`npm run build` 通过，实机/本地试玩通过

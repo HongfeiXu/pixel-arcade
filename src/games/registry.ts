@@ -1,6 +1,7 @@
 import type { GameEntry } from './types'
 import { TetrisGame } from './tetris/TetrisGame'
 import { EASY_PIECE_TYPES } from './tetris/pieces'
+import { AntiGravityGame } from './anti-gravity/AntiGravityGame'
 
 export const gameRegistry: GameEntry[] = [
   {
@@ -20,5 +21,14 @@ export const gameRegistry: GameEntry[] = [
       status: 'active',
     },
     createInstance: () => new TetrisGame(),
+  },
+  {
+    meta: {
+      id: 'anti-gravity',
+      name: '反重力方块',
+      icon: '',
+      status: 'active',
+    },
+    createInstance: () => new AntiGravityGame(),
   },
 ]

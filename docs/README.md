@@ -36,3 +36,12 @@
 | 文档 | 说明 |
 |------|------|
 | [feature-001-gamepad-redesign.md](dev/M2/feature-001-gamepad-redesign.md) | 经典手柄布局改造（D-pad + ABXY） |
+| [feature-002-realtime-highscore.md](dev/M2/feature-002-realtime-highscore.md) | 最高分实时更新 |
+| [feature-003-visual-feedback.md](dev/M2/feature-003-visual-feedback.md) | 消行动画与震屏反馈 |
+| [feature-004-sfx.md](dev/M2/feature-004-sfx.md) | 音效系统 |
+
+## M3 迭代记录 (`dev/M3/`)
+
+| 文档 | 说明 |
+|------|------|
+| [feature-005-anti-gravity.md](dev/M3/feature-005-anti-gravity.md) | 反重力方块设计与实现计划 |

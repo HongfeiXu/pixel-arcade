@@ -4,10 +4,10 @@
 
 | 层面 | 选择 | 说明 |
 |------|------|------|
-| UI 框架 | React 18 + TypeScript | 管理游戏大厅、路由、状态 |
+| UI 框架 | React 19 + TypeScript | 管理游戏大厅、路由、状态 |
 | 游戏渲染 | Canvas 2D | 每个游戏独立 Canvas |
 | 构建工具 | Vite | 快速开发体验 |
-| 路由 | React Router v6 | / 大厅、/game/:id 游戏页 |
+| 路由 | React Router v7 | / 大厅、/game/:id 游戏页 |
 | 样式 | CSS Modules | 每个组件一个 `.module.css`，类名自动隔离，不引入 UI 框架 |
 | PWA | Vite PWA Plugin | Service Worker + Manifest |
 | 部署 | GitHub Pages | GitHub Actions 自动构建 |
@@ -25,9 +25,15 @@ src/
   games/
     registry.ts          — 游戏注册表
     types.ts             — 统一游戏接口定义
+    shared/tetromino/    — 方块类型、形状、随机袋（俄罗斯方块系共用）
     tetris/
       TetrisGame.ts      — 核心游戏逻辑（纯 JS 类）
-      assets/            — 音效
+      board.ts           — 标准重力棋盘逻辑
+      renderer.ts        — 标准重力 Canvas 渲染
+    anti-gravity/
+      AntiGravityGame.ts — 反重力方块核心逻辑
+      board.ts           — 反向重力棋盘逻辑（底部隐藏区、向上 Ghost Piece）
+      renderer.ts        — 反重力 Canvas 渲染
   components/
     GamePad.tsx          — 虚拟手柄（通用）
     ScoreBoard.tsx       — 计分板
@@ -106,8 +112,8 @@ update() {
 
 | Key | 内容 |
 |-----|------|
-| `pixelarcade_scores` | `{ tetris: 12, ... }` 各游戏最高分 |
-| `pixelarcade_tetris_state` | 游戏暂停时的完整状态快照 |
+| `pixelarcade_scores` | `{ tetris: 12, "anti-gravity": 8, ... }` 各游戏最高分 |
+| `pixelarcade_{gameId}_state` | 游戏暂停时的完整状态快照 |
 | `pixelarcade_settings` | `{ soundEnabled: true }` |
 
 ## 音频方案
@@ -115,7 +121,8 @@ update() {
 使用 Web Audio API（AudioContext），不使用 `<audio>` 标签。
 
 - 在首次用户交互时初始化 AudioContext（iOS 要求）
-- 音效文件预加载为 AudioBuffer
+- BGM 在游戏倒计时/游玩中循环播放，暂停/结束时暂停
+- 短音效文件预加载为 AudioBuffer
 - 播放时创建 BufferSource 节点，一次性使用
 - 全局音量控制和静音开关
 
