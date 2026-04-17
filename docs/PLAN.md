@@ -23,7 +23,7 @@
 - [x] 宽屏适配（max-width 480px 居中，防止桌面端布局失控）
 - [x] 进度本地记录（暂停返回大厅后，再进游戏恢复到暂停时的状态）
 - [x] 最高分实时更新（游戏中超过最高分时立即刷新，不等结束）— [feature-002](dev/M2/feature-002-realtime-highscore.md)
-- [ ] 音效系统（按键、消行、Game Over 等短音效）
+- [x] 音效系统（按键、消行、Game Over 等短音效）— [feature-004](dev/M2/feature-004-sfx.md)
 - [x] 视觉反馈动画（消行闪白、震屏）— [feature-003](dev/M2/feature-003-visual-feedback.md)
 - [x] iOS 启动画面 & 图标
 

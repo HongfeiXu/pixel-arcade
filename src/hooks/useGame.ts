@@ -1,6 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
 import type { GameAction, GameState, GameInstance } from '../games/types'
 import { gameRegistry } from '../games/registry'
+import { useSfx } from './useSfx'
 
 const STORAGE_PREFIX = 'pixelarcade_'
 
@@ -13,6 +14,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
   const [highScore, setHighScore] = useState(0)
   const [hasSavedState, setHasSavedState] = useState<boolean | null>(null)
   const [savedScore, setSavedScore] = useState(0)
+  const playSfx = useSfx()
 
   // 初始化
   useEffect(() => {
@@ -50,6 +52,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
       localStorage.removeItem(STORAGE_PREFIX + gameId + '_state')
     }
     instance.onStateChange = (s) => { setState(s); syncNextPiece() }
+    instance.onSfx = playSfx
 
     // 计算 GameConfig — 使用容器的实际可用尺寸
     const canvas = canvasRef.current
@@ -121,7 +124,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
       instance.destroy()
       instanceRef.current = null
     }
-  }, [gameId, containerRef])
+  }, [gameId, containerRef, playSfx])
 
   const start = useCallback(() => {
     instanceRef.current?.start()

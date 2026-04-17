@@ -1,4 +1,4 @@
-import type { GameInstance, GameConfig, GameAction, GameState } from '../types'
+import type { GameInstance, GameConfig, GameAction, GameState, SfxEvent } from '../types'
 import type { Piece, Board, PieceType } from './types'
 import {
   COLS, calcCellSize,
@@ -19,6 +19,7 @@ export class TetrisGame implements GameInstance {
   onScoreChange?: (score: number) => void
   onGameOver?: (finalScore: number) => void
   onStateChange?: (state: GameState) => void
+  onSfx?: (event: SfxEvent) => void
 
   // --- 配置 ---
   private pieceTypes: PieceType[]
@@ -116,20 +117,21 @@ export class TetrisGame implements GameInstance {
     switch (action) {
       case 'left':
       case 'x':
-        this.movePiece(-1, 0)
+        if (this.movePiece(-1, 0)) this.onSfx?.('move')
         break
       case 'right':
       case 'b':
-        this.movePiece(1, 0)
+        if (this.movePiece(1, 0)) this.onSfx?.('move')
         break
       case 'down':
       case 'a':
+        if (!this.softDropping) this.onSfx?.('softDrop')
         this.softDropping = true
         this.dropTimer = SOFT_DROP_INTERVAL // 立即触发一次下落
         break
       case 'up':
       case 'y':
-        this.rotatePiece()
+        if (this.rotatePiece()) this.onSfx?.('rotate')
         break
     }
   }
@@ -274,8 +276,8 @@ export class TetrisGame implements GameInstance {
     return false
   }
 
-  private rotatePiece(): void {
-    if (!this.currentPiece || this.currentPiece.type === 'O') return
+  private rotatePiece(): boolean {
+    if (!this.currentPiece || this.currentPiece.type === 'O') return false
 
     const newRotation = (this.currentPiece.rotation + 1) % 4
     const piece = this.currentPiece
@@ -299,15 +301,16 @@ export class TetrisGame implements GameInstance {
             this.lockMoves++
             if (this.lockMoves >= MAX_LOCK_MOVES) {
               this.lock()
-              return
+              return true
             }
             this.lockTimer = 0
           }
         }
-        return
+        return true
       }
     }
     // 所有测试位失败，旋转不生效
+    return false
   }
 
   /** 获取 wall kick 测试位（简化 SRS） */
@@ -357,7 +360,6 @@ export class TetrisGame implements GameInstance {
     if (isValidPosition(this.board, this.currentPiece, this.currentPiece.x, this.currentPiece.y + 1, this.currentPiece.rotation)) {
       this.currentPiece.y++
     } else {
-      // 触底，开始锁定延迟
       this.isLocking = true
       this.lockTimer = 0
       this.lockMoves = 0
@@ -385,6 +387,7 @@ export class TetrisGame implements GameInstance {
       this.animRows = fullRows
       this.animTimer = 0
       this.currentPiece = null // 动画期间隐藏当前方块
+      this.onSfx?.(fullRows.length >= 4 ? 'tetris' : 'lineClear')
       // 震屏：2 行以上触发
       if (fullRows.length >= 2) {
         this.shakeIntensity = fullRows.length // 2~4px
@@ -403,6 +406,7 @@ export class TetrisGame implements GameInstance {
       this.setState('over')
       cancelAnimationFrame(this.rafId)
       this.renderFrame()
+      this.onSfx?.('gameOver')
       this.onGameOver?.(this.score)
     } else {
       this.currentPiece = newPiece

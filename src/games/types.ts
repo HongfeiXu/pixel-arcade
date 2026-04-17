@@ -10,6 +10,14 @@ export type GameAction = 'up' | 'down' | 'left' | 'right' | 'a' | 'b' | 'x' | 'y
 
 export type GameState = 'idle' | 'playing' | 'paused' | 'over'
 
+export type SfxEvent =
+  | 'move'
+  | 'rotate'
+  | 'softDrop'
+  | 'lineClear'
+  | 'tetris'
+  | 'gameOver'
+
 export interface GameConfig {
   width: number
   height: number
@@ -37,6 +45,7 @@ export interface GameInstance {
   onScoreChange?: (score: number) => void
   onGameOver?: (finalScore: number) => void
   onStateChange?: (state: GameState) => void
+  onSfx?: (event: SfxEvent) => void
 
   // 存档（仅序列化/反序列化，不直接读写 localStorage）
   saveState(): string
