@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import GameIcon from '../components/GameIcon'
 import { gameRegistry } from '../games/registry'
 import styles from './Home.module.css'
 
@@ -61,6 +62,7 @@ export default function Home() {
             onClick={() => handleCardClick(entry.meta.id, entry.meta.status)}
           >
             <div className={styles.cardCover}>
+              <GameIcon icon={entry.meta.icon} label={entry.meta.name} />
               {entry.meta.status === 'coming_soon' && (
                 <span className={styles.lockIcon}>🔒</span>
               )}

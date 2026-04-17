@@ -1,0 +1,29 @@
+.icon {
+  width: min(72%, 116px);
+  height: min(72%, 116px);
+  image-rendering: pixelated;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--icon-glow) 52%, transparent));
+}
+
+.backdrop {
+  stroke: color-mix(in srgb, var(--icon-glow) 64%, #ffffff 8%);
+  stroke-width: 3;
+}
+
+.inner {
+  fill: rgba(5, 10, 26, 0.34);
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 2;
+}
+
+.pixel {
+  stroke: rgba(5, 10, 26, 0.42);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.spark {
+  fill: var(--icon-glow);
+  opacity: 0.82;
+  shape-rendering: crispEdges;
+}

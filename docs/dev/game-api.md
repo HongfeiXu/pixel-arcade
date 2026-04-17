@@ -12,7 +12,7 @@
 interface GameMeta {
   id: string;             // 唯一标识，如 'tetris'
   name: string;           // 显示名称，如 '俄罗斯方块'
-  icon: string;           // 封面图路径
+  icon: string;           // 大厅内置像素图标 key，如 'tetris'
   status: 'active' | 'coming_soon';
   description?: string;   // 简短描述
 }
@@ -97,7 +97,7 @@ export const gameRegistry: GameEntry[] = [
     meta: {
       id: 'tetris',
       name: '俄罗斯方块',
-      icon: '/assets/tetris-cover.png',
+      icon: 'tetris',
       status: 'active',
     },
     createInstance: () => new TetrisGame(),
@@ -106,7 +106,7 @@ export const gameRegistry: GameEntry[] = [
     meta: {
       id: 'anti-gravity',
       name: '反重力方块',
-      icon: '',
+      icon: 'anti-gravity',
       status: 'active',
     },
     createInstance: () => new AntiGravityGame(),
@@ -131,6 +131,6 @@ export const gameRegistry: GameEntry[] = [
 
 1. 在 `src/games/` 下新建游戏目录
 2. 实现 `GameInstance` 接口
-3. 在 `registry.ts` 注册
+3. 在 `registry.ts` 注册，并为大厅选择一个 `icon` key
 4. 按需添加 `docs/design/` 或 `docs/dev/Mx/feature-xxx.md` 设计文档
 5. 更新 `docs/PLAN.md`、`docs/PROGRESS.md` 和文档索引

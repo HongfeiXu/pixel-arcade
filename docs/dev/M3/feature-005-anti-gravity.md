@@ -175,7 +175,7 @@ export function getGhostY(board: Board, piece: Piece): number {
   meta: {
     id: 'anti-gravity',
     name: '反重力方块',
-    icon: '',  // TODO: 像素图标
+    icon: 'anti-gravity',
     status: 'active',
   },
   createInstance: () => new AntiGravityGame(),

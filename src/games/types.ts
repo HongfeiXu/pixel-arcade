@@ -1,6 +1,7 @@
 export interface GameMeta {
   id: string
   name: string
+  /** Key for the built-in pixel-art icon shown in the game lobby. */
   icon: string
   status: 'active' | 'coming_soon'
   description?: string

@@ -28,7 +28,9 @@
 }
 
 .card {
-  background: #16213e;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #1d2b55 0%, #131b38 100%);
   border: 2px solid #4a4a8a;
   border-radius: 4px;
   padding: 12px;
@@ -37,6 +39,21 @@
   color: inherit;
   text-align: center;
   transition: transform 50ms;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 214, 0, 0.12), transparent 42%),
+    radial-gradient(circle at 78% 18%, rgba(0, 229, 255, 0.18), transparent 30%);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.card > * {
+  position: relative;
 }
 
 .card:active {
@@ -51,7 +68,13 @@
 
 .cardCover {
   aspect-ratio: 1;
-  background: #1e2a4a;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 50% 34%, rgba(255, 255, 255, 0.10), transparent 34%),
+    #1e2a4a;
+  background-size: 12px 12px, 12px 12px, auto, auto;
+  border: 2px solid rgba(255, 255, 255, 0.08);
   border-radius: 2px;
   margin-bottom: 8px;
   display: flex;

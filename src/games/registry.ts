@@ -8,7 +8,7 @@ export const gameRegistry: GameEntry[] = [
     meta: {
       id: 'tetris-easy',
       name: '俄罗斯方块（简单）',
-      icon: '',
+      icon: 'tetris-easy',
       status: 'active',
     },
     createInstance: () => new TetrisGame({ pieceTypes: EASY_PIECE_TYPES }),
@@ -17,7 +17,7 @@ export const gameRegistry: GameEntry[] = [
     meta: {
       id: 'tetris',
       name: '俄罗斯方块',
-      icon: '',
+      icon: 'tetris',
       status: 'active',
     },
     createInstance: () => new TetrisGame(),
@@ -26,7 +26,7 @@ export const gameRegistry: GameEntry[] = [
     meta: {
       id: 'anti-gravity',
       name: '反重力方块',
-      icon: '',
+      icon: 'anti-gravity',
       status: 'active',
     },
     createInstance: () => new AntiGravityGame(),
