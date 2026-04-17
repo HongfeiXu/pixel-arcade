@@ -1,5 +1,7 @@
 import { useRef, useCallback } from 'react'
+import type { ReactNode } from 'react'
 import type { GameAction } from '../games/types'
+import ArrowIcon from './ArrowIcon'
 import styles from './GamePad.module.css'
 
 interface GamePadProps {
@@ -17,28 +19,28 @@ export default function GamePad({ onAction, disabled }: GamePadProps) {
           action="up"
           onAction={onAction}
           disabled={disabled}
-          label="↑"
+          label={<ArrowIcon direction="up" />}
         />
         <RepeatButton
           className={`${styles.dpadBtn} ${styles.dpadLeft}`}
           action="left"
           onAction={onAction}
           disabled={disabled}
-          label="←"
+          label={<ArrowIcon direction="left" />}
         />
         <RepeatButton
           className={`${styles.dpadBtn} ${styles.dpadRight}`}
           action="right"
           onAction={onAction}
           disabled={disabled}
-          label="→"
+          label={<ArrowIcon direction="right" />}
         />
         <DpadButton
           className={`${styles.dpadBtn} ${styles.dpadDown}`}
           action="down"
           onAction={onAction}
           disabled={disabled}
-          label="↓"
+          label={<ArrowIcon direction="down" />}
         />
       </div>
 
@@ -65,7 +67,7 @@ function DpadButton({
   action: GameAction
   onAction: (action: GameAction) => void
   disabled?: boolean
-  label: string
+  label: ReactNode
 }) {
   return (
     <button
@@ -89,7 +91,7 @@ function RepeatButton({
   action: GameAction
   onAction: (action: GameAction) => void
   disabled?: boolean
-  label: string
+  label: ReactNode
 }) {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
