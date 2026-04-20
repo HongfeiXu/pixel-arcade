@@ -6,6 +6,7 @@
 |------|------|
 | [PLAN.md](PLAN.md) | 项目路线图与里程碑 |
 | [PROGRESS.md](PROGRESS.md) | 开发进度记录 |
+| [IDEAS.md](IDEAS.md) | 头脑风暴、候选游戏与轻量想法池 |
 
 ## 产品设计 (`design/`)
 
