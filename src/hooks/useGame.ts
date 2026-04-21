@@ -52,6 +52,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
       localStorage.removeItem(STORAGE_PREFIX + gameId + '_state')
     }
     instance.onStateChange = (s) => { setState(s); syncNextPiece() }
+    instance.onNextPieceChange = (pieceType) => { setNextPiece(pieceType) }
     instance.onSfx = playSfx
 
     // 计算 GameConfig — 使用容器的实际可用尺寸

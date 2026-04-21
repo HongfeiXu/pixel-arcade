@@ -46,6 +46,7 @@ export interface GameInstance {
   onScoreChange?: (score: number) => void
   onGameOver?: (finalScore: number) => void
   onStateChange?: (state: GameState) => void
+  onNextPieceChange?: (pieceType: string | null) => void
   onSfx?: (event: SfxEvent) => void
 
   // 存档（仅序列化/反序列化，不直接读写 localStorage）

@@ -19,6 +19,7 @@ export class AntiGravityGame implements GameInstance {
   onScoreChange?: (score: number) => void
   onGameOver?: (finalScore: number) => void
   onStateChange?: (state: GameState) => void
+  onNextPieceChange?: (pieceType: string | null) => void
   onSfx?: (event: SfxEvent) => void
 
   // --- 配置 ---
@@ -239,6 +240,7 @@ export class AntiGravityGame implements GameInstance {
 
   private spawnPiece(): Piece {
     const type = this.bag.next()
+    this.onNextPieceChange?.(this.bag.peek() ?? null)
     return { type, rotation: 0, x: SPAWN_X, y: SPAWN_Y }
   }
 
