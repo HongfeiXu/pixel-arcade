@@ -11,7 +11,10 @@ export function calcCellSize(availableWidth: number, availableHeight: number): n
 // 速度
 export const TICK_INTERVAL = 500       // ms，2 格/秒
 export const TICK_INTERVAL_FAST = 200  // ms，5 格/秒
-export const ACCEL_TIMEOUT = 250       // ms，上次加速输入多久后退出 fastMode
+// 加速窗口：上次方向输入距今若超过 ACCEL_GAP_MAX 则视为"松开"，
+// 持续时长需先达到 HOLD_ACCEL_DELAY 才进入 fastMode（避免单次 tap 误触发）
+export const ACCEL_GAP_MAX = 200       // ms，> DAS(150) + 余量
+export const HOLD_ACCEL_DELAY = 500    // ms，按下后多久开始加速
 
 // 视觉配色
 export const COLOR_BG = '#1A1A2E'

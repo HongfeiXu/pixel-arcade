@@ -9,7 +9,8 @@ type Internal = {
   food: Point | null
   direction: Direction
   pendingDirection: Direction
-  lastAccelTime: number
+  lastInputTime: number
+  holdStartTime: number
   accumulatedTime: number
   state: 'idle' | 'playing' | 'paused' | 'over'
   renderer: { init: () => void; render: () => void }
@@ -237,25 +238,44 @@ describe('XYAB 方向映射', () => {
 })
 
 describe('长按加速心跳', () => {
-  test('任意方向输入（D-pad 或 XYAB）都刷新 lastAccelTime', () => {
+  test('任意方向输入（D-pad 或 XYAB）都刷新 lastInputTime', () => {
     const actions: Array<'up' | 'down' | 'left' | 'right' | 'a' | 'b' | 'x' | 'y'> = [
       'up', 'down', 'left', 'right', 'a', 'b', 'x', 'y',
     ]
     for (const a of actions) {
       const g = makeGame()
       g.start()
-      const before = peek(g).lastAccelTime
+      const before = peek(g).lastInputTime
       g.onInput(a)
-      expect(peek(g).lastAccelTime).toBeGreaterThan(before)
+      expect(peek(g).lastInputTime).toBeGreaterThan(before)
     }
   })
 
-  test('pause 键不刷新 lastAccelTime', () => {
+  test('pause 键不刷新 lastInputTime', () => {
     const g = makeGame()
     g.start()
-    const before = peek(g).lastAccelTime
+    const before = peek(g).lastInputTime
     g.onInput('pause')
-    expect(peek(g).lastAccelTime).toBe(before)
+    expect(peek(g).lastInputTime).toBe(before)
+  })
+
+  test('首次方向输入时 holdStartTime = lastInputTime（holdDuration=0）', () => {
+    const g = makeGame()
+    g.start()
+    g.onInput('up')
+    expect(peek(g).holdStartTime).toBe(peek(g).lastInputTime)
+  })
+
+  test('长时间间隔后再次输入视为新按下：holdStartTime 重置', async () => {
+    const g = makeGame()
+    g.start()
+    g.onInput('up')
+    const firstHoldStart = peek(g).holdStartTime
+    // 等待超过 ACCEL_GAP_MAX (200ms)
+    await new Promise((r) => setTimeout(r, 250))
+    g.onInput('up')
+    const secondHoldStart = peek(g).holdStartTime
+    expect(secondHoldStart).toBeGreaterThan(firstHoldStart)
   })
 })
 

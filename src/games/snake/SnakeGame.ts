@@ -1,6 +1,6 @@
 import type { GameInstance, GameConfig, GameAction, GameState, SfxEvent } from '../types'
 import type { Direction, Point, SnakeSavedState } from './types'
-import { calcCellSize, COLS, ROWS, TICK_INTERVAL, TICK_INTERVAL_FAST, ACCEL_TIMEOUT, FLASH_DURATION, SHAKE_DURATION, SHAKE_INTENSITY } from './constants'
+import { calcCellSize, COLS, ROWS, TICK_INTERVAL, TICK_INTERVAL_FAST, ACCEL_GAP_MAX, HOLD_ACCEL_DELAY, FLASH_DURATION, SHAKE_DURATION, SHAKE_INTENSITY } from './constants'
 import { spawnFood } from './food'
 import { SnakeRenderer } from './renderer'
 
@@ -26,7 +26,11 @@ export class SnakeGame implements GameInstance {
   private accumulatedTime = 0
 
   // --- 加速心跳 ---
-  private lastAccelTime = -Infinity
+  // lastInputTime：上次方向输入时间戳；holdStartTime：当前按下序列起始时间戳
+  // 单次 tap：两者相等，holdDuration=0 不触发 fastMode
+  // 连按住：DAS 心跳每 150ms 刷 lastInputTime，holdStartTime 不变 → holdDuration 累积
+  private lastInputTime = -Infinity
+  private holdStartTime = -Infinity
 
   // --- 视觉反馈 ---
   private flashPos: Point | null = null
@@ -50,7 +54,8 @@ export class SnakeGame implements GameInstance {
     this.pendingDirection = 'right'
     this.food = spawnFood(this.segments)
     this.accumulatedTime = 0
-    this.lastAccelTime = -Infinity
+    this.lastInputTime = -Infinity
+    this.holdStartTime = -Infinity
     this.flashPos = null
     this.flashTimer = 0
     this.shakeTimer = 0
@@ -108,8 +113,12 @@ export class SnakeGame implements GameInstance {
     if (newDir !== opposite[this.direction]) {
       this.pendingDirection = newDir
     }
-    // 任意方向键输入都刷加速心跳（长按 = 持续加速）
-    this.lastAccelTime = performance.now()
+    // 加速窗口追踪：距上次输入过久则视为新按下，重置 holdStartTime
+    const now = performance.now()
+    if (now - this.lastInputTime > ACCEL_GAP_MAX) {
+      this.holdStartTime = now
+    }
+    this.lastInputTime = now
   }
 
   saveState(): string {
@@ -133,7 +142,8 @@ export class SnakeGame implements GameInstance {
     this.food = s.food
     this.score = s.score
     this.accumulatedTime = 0
-    this.lastAccelTime = -Infinity
+    this.lastInputTime = -Infinity
+    this.holdStartTime = -Infinity
     this.flashPos = null
     this.flashTimer = 0
     this.shakeTimer = 0
@@ -174,7 +184,9 @@ export class SnakeGame implements GameInstance {
     if (this.shakeTimer > 0) this.shakeTimer = Math.max(0, this.shakeTimer - delta)
     if (this.flashTimer > 0) this.flashTimer = Math.max(0, this.flashTimer - delta)
 
-    const fastMode = now - this.lastAccelTime < ACCEL_TIMEOUT
+    const stillHolding = now - this.lastInputTime < ACCEL_GAP_MAX
+    const heldLongEnough = now - this.holdStartTime >= HOLD_ACCEL_DELAY
+    const fastMode = stillHolding && heldLongEnough
     const interval = fastMode ? TICK_INTERVAL_FAST : TICK_INTERVAL
 
     this.accumulatedTime += delta

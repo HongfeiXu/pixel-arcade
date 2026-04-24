@@ -147,7 +147,11 @@ type SnakeSavedState = {
   - 映射到 `Direction`：y=up, a=down, x=left, b=right；D-pad 按字面
   - 过滤反向（掉头保护）后写入 `pendingDirection`
   - 刷新 `lastAccelTime = performance.now()`
-- tick 时 `fastMode = (now - lastAccelTime) < ACCEL_TIMEOUT (250ms)`，因此长按（RepeatButton / DAS 每 150ms 心跳）时 fastMode 持续为 true
+- tick 时 `fastMode = stillHolding && heldLongEnough`
+  - `stillHolding`：`now - lastInputTime < ACCEL_GAP_MAX (200ms)` — 距上次心跳未超时
+  - `heldLongEnough`：`now - holdStartTime >= HOLD_ACCEL_DELAY (500ms)` — 按下已累计 500ms+
+  - 单次 tap：holdDuration=0 不触发加速（避免"一按就冲一步"的误触感）
+  - 长按（DAS/RepeatButton 每 150ms 心跳）：前 500ms 慢速，之后进入 fastMode
 - UI 侧：GamePad `directionRepeat={true}` 让 up/down/Y/A 也使用 RepeatButton
 - 键盘侧：snake 专属 keyMap 让 ArrowUp/Down/W/S 也 `repeat: true`
 - `pause` → phase 切换；React 侧在 pause 时调 `saveState` 存档
