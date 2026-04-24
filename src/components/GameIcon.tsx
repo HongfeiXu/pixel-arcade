@@ -65,6 +65,25 @@ const ICONS: Record<string, IconConfig> = {
       '.ss.....',
     ],
   },
+  snake: {
+    bg: '#1e3a2b',
+    glow: '#8cffb7',
+    palette: {
+      h: '#FFD600',   // 头
+      b: '#00E5FF',   // 身
+      f: '#FF5252',   // 食物
+    },
+    pixels: [
+      '........',
+      '..bbbb..',
+      '.b....b.',
+      '.b.hh.b.',
+      '.b.hh.f.',
+      '.b......',
+      '.bbbbb..',
+      '........',
+    ],
+  },
 }
 
 const FALLBACK_ICON = ICONS.tetris
