@@ -9,8 +9,8 @@ export function calcCellSize(availableWidth: number, availableHeight: number): n
 }
 
 // 速度
-export const TICK_INTERVAL = 250       // ms，4 格/秒
-export const TICK_INTERVAL_FAST = 125  // ms，8 格/秒
+export const TICK_INTERVAL = 500       // ms，2 格/秒
+export const TICK_INTERVAL_FAST = 200  // ms，5 格/秒
 export const ACCEL_TIMEOUT = 250       // ms，上次加速输入多久后退出 fastMode
 
 // 视觉配色
