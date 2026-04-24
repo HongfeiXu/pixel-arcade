@@ -1,5 +1,5 @@
 import type { Point } from './types'
-import { COLS, ROWS, COLOR_BG, COLOR_BOARD_BG, COLOR_GRID } from './constants'
+import { COLS, ROWS, COLOR_BG, COLOR_BOARD_BG, COLOR_GRID, COLOR_HEAD, COLOR_BODY } from './constants'
 
 export class SnakeRenderer {
   private ctx!: CanvasRenderingContext2D
@@ -46,16 +46,28 @@ export class SnakeRenderer {
     // 辅助网格
     this.drawGrid()
 
-    // TODO Task 2: 画蛇
+    // 蛇身
+    for (let i = segments.length - 1; i >= 0; i--) {
+      const seg = segments[i]
+      const isHead = i === 0
+      this.drawCell(seg, isHead ? COLOR_HEAD : COLOR_BODY)
+    }
+
     // TODO Task 3: 画食物
     // TODO Task 6: 闪白叠加
 
-    // 防止 unused 警告（Task 2/3/6 会用到）
-    void segments
     void food
     void flash
 
     ctx.restore()
+  }
+
+  private drawCell(p: Point, color: string): void {
+    const cs = this.cellSize
+    const ctx = this.ctx
+    // 1px 内缩制造像素描边
+    ctx.fillStyle = color
+    ctx.fillRect(p.x * cs + 1, p.y * cs + 1, cs - 2, cs - 2)
   }
 
   private drawGrid(): void {

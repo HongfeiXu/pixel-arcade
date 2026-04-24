@@ -1,6 +1,6 @@
 import type { GameInstance, GameConfig, GameAction, GameState, SfxEvent } from '../types'
 import type { Direction, Point } from './types'
-import { calcCellSize } from './constants'
+import { calcCellSize, COLS, ROWS, TICK_INTERVAL } from './constants'
 import { SnakeRenderer } from './renderer'
 
 export class SnakeGame implements GameInstance {
@@ -78,8 +78,24 @@ export class SnakeGame implements GameInstance {
   getState(): GameState { return this.state }
   getScore(): number { return this.score }
 
-  onInput(_action: GameAction): void {
-    // Task 2 / Task 5 填充
+  onInput(action: GameAction): void {
+    if (this.state !== 'playing') return
+
+    switch (action) {
+      case 'up':
+        if (this.direction !== 'down') this.pendingDirection = 'up'
+        break
+      case 'down':
+        if (this.direction !== 'up') this.pendingDirection = 'down'
+        break
+      case 'left':
+        if (this.direction !== 'right') this.pendingDirection = 'left'
+        break
+      case 'right':
+        if (this.direction !== 'left') this.pendingDirection = 'right'
+        break
+      // a/b/x/y Task 5 填充
+    }
   }
 
   saveState(): string {
@@ -107,12 +123,31 @@ export class SnakeGame implements GameInstance {
     this.rafId = requestAnimationFrame(this.loop)
   }
 
-  private update(_delta: number, _now: number): void {
-    // Task 2 填充：推进 tick
-    void this.direction
-    void this.pendingDirection
-    void this.accumulatedTime
+  private update(delta: number, _now: number): void {
+    this.accumulatedTime += delta
+    const interval = TICK_INTERVAL  // Task 5 改成 fastMode 三元
     void this.lastAccelTime
+    while (this.accumulatedTime >= interval) {
+      this.accumulatedTime -= interval
+      this.tick()
+      if (this.state !== 'playing') break
+    }
+  }
+
+  private tick(): void {
+    this.direction = this.pendingDirection
+    const head = this.segments[0]
+    const d = this.direction
+    const dx = d === 'left' ? -1 : d === 'right' ? 1 : 0
+    const dy = d === 'up' ? -1 : d === 'down' ? 1 : 0
+    const newHead: Point = {
+      x: (head.x + dx + COLS) % COLS,
+      y: (head.y + dy + ROWS) % ROWS,
+    }
+    this.segments.unshift(newHead)
+    this.segments.pop()
+    // 撞自己 Task 4
+    // 吃食物 Task 3
   }
 
   private renderFrame(): void {
