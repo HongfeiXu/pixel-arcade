@@ -1,6 +1,6 @@
 import type { GameInstance, GameConfig, GameAction, GameState, SfxEvent } from '../types'
 import type { Direction, Point } from './types'
-import { calcCellSize, COLS, ROWS, TICK_INTERVAL } from './constants'
+import { calcCellSize, COLS, ROWS, TICK_INTERVAL, SHAKE_DURATION, SHAKE_INTENSITY } from './constants'
 import { spawnFood } from './food'
 import { SnakeRenderer } from './renderer'
 
@@ -116,15 +116,28 @@ export class SnakeGame implements GameInstance {
   }
 
   private loop = (now: number): void => {
-    if (this.state !== 'playing') return
     const delta = Math.min(now - this.lastTime, 200)
     this.lastTime = now
-    this.update(delta, now)
+
+    if (this.state === 'playing') {
+      this.update(delta, now)
+    } else if (this.state === 'over' && this.shakeTimer > 0) {
+      // 仅衰减震屏计时，不推 tick
+      this.shakeTimer = Math.max(0, this.shakeTimer - delta)
+    } else {
+      return
+    }
+
     this.renderFrame()
-    this.rafId = requestAnimationFrame(this.loop)
+
+    if (this.state === 'playing' || (this.state === 'over' && this.shakeTimer > 0)) {
+      this.rafId = requestAnimationFrame(this.loop)
+    }
   }
 
   private update(delta: number, _now: number): void {
+    if (this.shakeTimer > 0) this.shakeTimer = Math.max(0, this.shakeTimer - delta)
+
     this.accumulatedTime += delta
     const interval = TICK_INTERVAL  // Task 5 改成 fastMode 三元
     void this.lastAccelTime
@@ -146,7 +159,21 @@ export class SnakeGame implements GameInstance {
       y: (head.y + dy + ROWS) % ROWS,
     }
     const willEat = this.food !== null && newHead.x === this.food.x && newHead.y === this.food.y
-    // 撞自己 Task 4
+
+    // 判定 body：若本 tick 会吃到食物，蛇不弹尾；否则尾部让开
+    const body = willEat
+      ? this.segments
+      : this.segments.slice(0, -1)
+    for (const s of body) {
+      if (s.x === newHead.x && s.y === newHead.y) {
+        this.onSfx?.('gameOver')
+        this.shakeTimer = SHAKE_DURATION
+        this.setState('over')
+        cancelAnimationFrame(this.rafId)
+        this.onGameOver?.(this.score)
+        return
+      }
+    }
 
     this.segments.unshift(newHead)
     if (willEat) {
@@ -160,9 +187,14 @@ export class SnakeGame implements GameInstance {
   }
 
   private renderFrame(): void {
-    const shake = this.shakeTimer > 0
-      ? { x: (Math.random() - 0.5) * 8, y: (Math.random() - 0.5) * 8 }
-      : null
+    let shake: { x: number; y: number } | null = null
+    if (this.shakeTimer > 0) {
+      const intensity = (this.shakeTimer / SHAKE_DURATION) * SHAKE_INTENSITY
+      shake = {
+        x: (Math.random() - 0.5) * 2 * intensity,
+        y: (Math.random() - 0.5) * 2 * intensity,
+      }
+    }
     const flash = this.flashPos && this.flashTimer > 0
       ? { pos: this.flashPos, on: true }
       : null
