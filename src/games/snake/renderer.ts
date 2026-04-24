@@ -1,5 +1,5 @@
 import type { Point } from './types'
-import { COLS, ROWS, COLOR_BG, COLOR_BOARD_BG, COLOR_GRID, COLOR_HEAD, COLOR_BODY } from './constants'
+import { COLS, ROWS, COLOR_BG, COLOR_BOARD_BG, COLOR_GRID, COLOR_HEAD, COLOR_BODY, COLOR_FOOD } from './constants'
 
 export class SnakeRenderer {
   private ctx!: CanvasRenderingContext2D
@@ -53,10 +53,12 @@ export class SnakeRenderer {
       this.drawCell(seg, isHead ? COLOR_HEAD : COLOR_BODY)
     }
 
-    // TODO Task 3: 画食物
+    if (food) {
+      this.drawCell(food, COLOR_FOOD)
+    }
+
     // TODO Task 6: 闪白叠加
 
-    void food
     void flash
 
     ctx.restore()

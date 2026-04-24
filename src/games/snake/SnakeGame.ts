@@ -1,6 +1,7 @@
 import type { GameInstance, GameConfig, GameAction, GameState, SfxEvent } from '../types'
 import type { Direction, Point } from './types'
 import { calcCellSize, COLS, ROWS, TICK_INTERVAL } from './constants'
+import { spawnFood } from './food'
 import { SnakeRenderer } from './renderer'
 
 export class SnakeGame implements GameInstance {
@@ -47,7 +48,7 @@ export class SnakeGame implements GameInstance {
     ]
     this.direction = 'right'
     this.pendingDirection = 'right'
-    this.food = null  // Task 3 填入
+    this.food = spawnFood(this.segments)
     this.accumulatedTime = 0
     this.lastAccelTime = -Infinity
     this.flashPos = null
@@ -144,10 +145,18 @@ export class SnakeGame implements GameInstance {
       x: (head.x + dx + COLS) % COLS,
       y: (head.y + dy + ROWS) % ROWS,
     }
-    this.segments.unshift(newHead)
-    this.segments.pop()
+    const willEat = this.food !== null && newHead.x === this.food.x && newHead.y === this.food.y
     // 撞自己 Task 4
-    // 吃食物 Task 3
+
+    this.segments.unshift(newHead)
+    if (willEat) {
+      this.score++
+      this.onScoreChange?.(this.score)
+      this.onSfx?.('lineClear')
+      this.food = spawnFood(this.segments)
+    } else {
+      this.segments.pop()
+    }
   }
 
   private renderFrame(): void {
