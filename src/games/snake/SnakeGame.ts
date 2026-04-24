@@ -1,6 +1,6 @@
 import type { GameInstance, GameConfig, GameAction, GameState, SfxEvent } from '../types'
 import type { Direction, Point, SnakeSavedState } from './types'
-import { calcCellSize, COLS, ROWS, TICK_INTERVAL, TICK_INTERVAL_FAST, ACCEL_GAP_MAX, HOLD_ACCEL_DELAY, FLASH_DURATION, SHAKE_DURATION, SHAKE_INTENSITY } from './constants'
+import { calcCellSize, COLS, ROWS, TICK_INTERVAL, TICK_INTERVAL_FAST, ACCEL_GAP_MAX, HOLD_ACCEL_DELAY, MAX_INPUT_QUEUE, FLASH_DURATION, SHAKE_DURATION, SHAKE_INTENSITY } from './constants'
 import { spawnFood } from './food'
 import { SnakeRenderer } from './renderer'
 
@@ -16,7 +16,9 @@ export class SnakeGame implements GameInstance {
   private score = 0
   private segments: Point[] = []
   private direction: Direction = 'right'
-  private pendingDirection: Direction = 'right'
+  // 方向输入队列：每 tick 消费 1 个，支持快速连按两次形成 L/U 形转向
+  // 去重与反向过滤以"队尾（或 direction）"为基准，避免 DAS 连发灌满
+  private inputQueue: Direction[] = []
   private food: Point | null = null
   private renderer = new SnakeRenderer()
 
@@ -51,7 +53,7 @@ export class SnakeGame implements GameInstance {
       { x: 6, y: 7 },
     ]
     this.direction = 'right'
-    this.pendingDirection = 'right'
+    this.inputQueue = []
     this.food = spawnFood(this.segments)
     this.accumulatedTime = 0
     this.lastInputTime = -Infinity
@@ -106,13 +108,24 @@ export class SnakeGame implements GameInstance {
         return
     }
 
-    // 掉头保护：过滤反向
+    // 以"队列末尾方向"（若空则 direction）作为判定基准，
+    // 这样连按两次转向能正确排队（例如向上时按 右→下 形成 L 形）
     const opposite: Record<Direction, Direction> = {
       up: 'down', down: 'up', left: 'right', right: 'left',
     }
-    if (newDir !== opposite[this.direction]) {
-      this.pendingDirection = newDir
+    const tail = this.inputQueue.length > 0
+      ? this.inputQueue[this.inputQueue.length - 1]
+      : this.direction
+    // 和队尾一致：去重（DAS 连发同向会被吃掉，避免灌满）
+    // 和队尾反向：掉头保护
+    const shouldEnqueue =
+      newDir !== tail
+      && newDir !== opposite[tail]
+      && this.inputQueue.length < MAX_INPUT_QUEUE
+    if (shouldEnqueue) {
+      this.inputQueue.push(newDir)
     }
+
     // 加速窗口追踪：距上次输入过久则视为新按下，重置 holdStartTime
     const now = performance.now()
     if (now - this.lastInputTime > ACCEL_GAP_MAX) {
@@ -126,7 +139,6 @@ export class SnakeGame implements GameInstance {
       version: 1,
       segments: this.segments.map(s => ({ x: s.x, y: s.y })),
       direction: this.direction,
-      pendingDirection: this.pendingDirection,
       food: this.food!,  // 运行态下 food 必非空
       score: this.score,
     }
@@ -138,7 +150,7 @@ export class SnakeGame implements GameInstance {
     if (s.version !== 1) return  // 不兼容旧版则丢弃
     this.segments = s.segments.map(p => ({ x: p.x, y: p.y }))
     this.direction = s.direction
-    this.pendingDirection = s.pendingDirection
+    this.inputQueue = []
     this.food = s.food
     this.score = s.score
     this.accumulatedTime = 0
@@ -198,7 +210,9 @@ export class SnakeGame implements GameInstance {
   }
 
   private tick(): void {
-    this.direction = this.pendingDirection
+    // 从队列取下一个方向（若有），否则保持当前
+    const next = this.inputQueue.shift()
+    if (next !== undefined) this.direction = next
     const head = this.segments[0]
     const d = this.direction
     const dx = d === 'left' ? -1 : d === 'right' ? 1 : 0

@@ -145,8 +145,14 @@ type SnakeSavedState = {
 
 - 所有 8 个方向输入（D-pad 上下左右 + XYAB 的 y/a/x/b）通过统一分支处理：
   - 映射到 `Direction`：y=up, a=down, x=left, b=right；D-pad 按字面
-  - 过滤反向（掉头保护）后写入 `pendingDirection`
-  - 刷新 `lastAccelTime = performance.now()`
+  - 写入**方向输入队列** `inputQueue`（上限 `MAX_INPUT_QUEUE=3`）
+  - 去重与掉头保护基于**队尾**（若空则当前 direction）为基准：
+    - 与队尾同向 → 去重跳过（DAS 连发不会灌满）
+    - 与队尾反向 → 掉头保护跳过
+    - 其他情况 → 入队
+  - 这样"向上时连按 右→下"形成 L 形转向时两次输入都能正确排队
+  - `tick()` 开头从队头取出一个方向应用（`shift`），空队列则保持当前方向
+  - 每次方向输入同时刷新 `lastInputTime = performance.now()`
 - tick 时 `fastMode = stillHolding && heldLongEnough`
   - `stillHolding`：`now - lastInputTime < ACCEL_GAP_MAX (200ms)` — 距上次心跳未超时
   - `heldLongEnough`：`now - holdStartTime >= HOLD_ACCEL_DELAY (500ms)` — 按下已累计 500ms+

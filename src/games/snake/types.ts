@@ -9,7 +9,6 @@ export interface SnakeSavedState {
   version: 1
   segments: Point[]
   direction: Direction
-  pendingDirection: Direction
   food: Point
   score: number
 }

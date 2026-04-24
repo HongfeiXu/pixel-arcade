@@ -16,6 +16,9 @@ export const TICK_INTERVAL_FAST = 200  // ms，5 格/秒
 export const ACCEL_GAP_MAX = 200       // ms，> DAS(150) + 余量
 export const HOLD_ACCEL_DELAY = 500    // ms，按下后多久开始加速
 
+// 方向输入队列上限（tick 每次消费 1 个；连续两次转向形成 L/U 时依次应用）
+export const MAX_INPUT_QUEUE = 3
+
 // 视觉配色
 export const COLOR_BG = '#1A1A2E'
 export const COLOR_BOARD_BG = '#16213E'
