@@ -1,5 +1,5 @@
 import type { GameInstance, GameConfig, GameAction, GameState, SfxEvent } from '../types'
-import type { Direction, Point } from './types'
+import type { Direction, Point, SnakeSavedState } from './types'
 import { calcCellSize, COLS, ROWS, TICK_INTERVAL, TICK_INTERVAL_FAST, ACCEL_TIMEOUT, FLASH_DURATION, SHAKE_DURATION, SHAKE_INTENSITY } from './constants'
 import { spawnFood } from './food'
 import { SnakeRenderer } from './renderer'
@@ -105,12 +105,34 @@ export class SnakeGame implements GameInstance {
   }
 
   saveState(): string {
-    // Task 7 填充
-    return '{}'
+    const snapshot: SnakeSavedState = {
+      version: 1,
+      segments: this.segments.map(s => ({ x: s.x, y: s.y })),
+      direction: this.direction,
+      pendingDirection: this.pendingDirection,
+      food: this.food!,  // 运行态下 food 必非空
+      score: this.score,
+    }
+    return JSON.stringify(snapshot)
   }
 
-  loadState(_data: string): void {
-    // Task 7 填充
+  loadState(data: string): void {
+    const s: SnakeSavedState = JSON.parse(data)
+    if (s.version !== 1) return  // 不兼容旧版则丢弃
+    this.segments = s.segments.map(p => ({ x: p.x, y: p.y }))
+    this.direction = s.direction
+    this.pendingDirection = s.pendingDirection
+    this.food = s.food
+    this.score = s.score
+    this.accumulatedTime = 0
+    this.lastAccelTime = -Infinity
+    this.flashPos = null
+    this.flashTimer = 0
+    this.shakeTimer = 0
+    this.setState('playing')
+    this.lastTime = performance.now()
+    this.renderFrame()
+    this.loop(this.lastTime)
   }
 
   // --- 内部 ---
