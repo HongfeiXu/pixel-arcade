@@ -1,6 +1,6 @@
 import type { GameInstance, GameConfig, GameAction, GameState, SfxEvent } from '../types'
 import type { Direction, Point } from './types'
-import { calcCellSize, COLS, ROWS, TICK_INTERVAL, TICK_INTERVAL_FAST, ACCEL_TIMEOUT, SHAKE_DURATION, SHAKE_INTENSITY } from './constants'
+import { calcCellSize, COLS, ROWS, TICK_INTERVAL, TICK_INTERVAL_FAST, ACCEL_TIMEOUT, FLASH_DURATION, SHAKE_DURATION, SHAKE_INTENSITY } from './constants'
 import { spawnFood } from './food'
 import { SnakeRenderer } from './renderer'
 
@@ -142,6 +142,7 @@ export class SnakeGame implements GameInstance {
 
   private update(delta: number, now: number): void {
     if (this.shakeTimer > 0) this.shakeTimer = Math.max(0, this.shakeTimer - delta)
+    if (this.flashTimer > 0) this.flashTimer = Math.max(0, this.flashTimer - delta)
 
     const fastMode = now - this.lastAccelTime < ACCEL_TIMEOUT
     const interval = fastMode ? TICK_INTERVAL_FAST : TICK_INTERVAL
@@ -186,6 +187,8 @@ export class SnakeGame implements GameInstance {
       this.score++
       this.onScoreChange?.(this.score)
       this.onSfx?.('lineClear')
+      this.flashPos = { x: newHead.x, y: newHead.y }
+      this.flashTimer = FLASH_DURATION
       this.food = spawnFood(this.segments)
     } else {
       this.segments.pop()
