@@ -31,7 +31,7 @@
 | 模式 | tickInterval | 频率 |
 |------|--------------|------|
 | 默认 | 500ms | 2 格/秒 |
-| 加速（XYAB 任一按住） | 200ms | 5 格/秒 |
+| 加速（任一方向键长按） | 200ms | 5 格/秒 |
 
 全程恒速，不随蛇长或分数变化。加速倍率 2.5×，反差比 4/8 明显，给小朋友更大的"主动提速"爽点。
 
@@ -41,13 +41,14 @@
 
 | 输入 | 动作 |
 |------|------|
-| D-pad 上 / 下 / 左 / 右 | 改变方向（经过掉头保护） |
-| XYAB 任一按下 | 进入加速模式 |
-| XYAB 全部松开 | 退出加速模式 |
+| D-pad 上 / 下 / 左 / 右 | 改变方向（经过掉头保护）；**长按 = 加速** |
+| XYAB（Y=上 / A=下 / X=左 / B=右） | 同 D-pad，完全等价；**长按 = 加速** |
 | 暂停键 | 暂停 / 恢复 |
 
-- 方向控制只认 D-pad——贪吃蛇方向是状态量，不适合四方按钮重复映射
-- 加速键 XYAB 四键全部等价，按住任一即加速；用 `Set` 跟踪按下状态，全部 release 后才退出，避免多键释放顺序误判
+- **XYAB 等价于 D-pad**，和 tetris / anti-gravity 系列的肌肉记忆对齐（虽然这两款的语义不同，物理布局一致）
+- **加速 = 长按任一方向键**（不再占用独立按键）。实现：任何方向输入到达即刷 `lastAccelTime`；UI 侧 D-pad 上下和 Y/A 使用 RepeatButton（通过 GamePad 的 `directionRepeat` prop 按游戏启用），键盘侧 snake 专属 keyMap 让上下方向键 `repeat: true`，形成 150ms DAS 心跳，`ACCEL_TIMEOUT=250ms` 足以连续保持
+- 短按 = 一次方向改变 + 约 250ms 短脉冲加速
+- 左/右已有 DAS（tetris 遗留），Y/A（= 上/下）按 snake 需求启用
 
 ### 游戏结束
 
@@ -142,10 +143,14 @@ type SnakeSavedState = {
 
 ### 输入处理
 
-- D-pad 方向键 → `handleAction({ type: 'direction', dir })` → `pendingDirection = filterReverse(dir, state.direction)`
-- XYAB `press` → `pressedAccelerators.add(key)`；`pressedAccelerators.size > 0` 时 `fastMode = true`
-- XYAB `release` → `pressedAccelerators.delete(key)`；清空后 `fastMode = false`
-- `pause` → phase 切换；React 侧在 pause 时调 `getSnapshot` 存档
+- 所有 8 个方向输入（D-pad 上下左右 + XYAB 的 y/a/x/b）通过统一分支处理：
+  - 映射到 `Direction`：y=up, a=down, x=left, b=right；D-pad 按字面
+  - 过滤反向（掉头保护）后写入 `pendingDirection`
+  - 刷新 `lastAccelTime = performance.now()`
+- tick 时 `fastMode = (now - lastAccelTime) < ACCEL_TIMEOUT (250ms)`，因此长按（RepeatButton / DAS 每 150ms 心跳）时 fastMode 持续为 true
+- UI 侧：GamePad `directionRepeat={true}` 让 up/down/Y/A 也使用 RepeatButton
+- 键盘侧：snake 专属 keyMap 让 ArrowUp/Down/W/S 也 `repeat: true`
+- `pause` → phase 切换；React 侧在 pause 时调 `saveState` 存档
 
 ### GameInstance 接口
 
@@ -237,7 +242,7 @@ class SnakeGame implements GameInstance {
 ## 风险与已知坑
 
 - **撞尾误判**：算法步骤 4 的 `slice(0, -1)` 必须放在 `willEat` 分支判定之后，顺序反了会在"紧贴尾部 + 吃食物"极少数情况下错判
-- **多键释放**：用 Set 跟踪加速键按下状态，避免"按 A → 按 B → 松 A" 时 fastMode 被错误关闭
+- **方向输入 = 加速心跳源**：fastMode 依赖每 150ms 到达的 DAS 心跳，`ACCEL_TIMEOUT=250ms` 留了 100ms 容忍。更长的 DAS 间隔（修改 useKeyboard.DAS_INTERVAL 或 RepeatButton 的 setInterval）会导致 fastMode 间歇性退出，需同步调大 `ACCEL_TIMEOUT`
 - **食物生成饥饿**：蛇填满棋盘时均匀随机会退化；15×15=225 格，蛇 200 节以上才明显，不优化
 - **浏览器 tab 切换**：`visibilitychange` 触发的 pause 路径已存在，贪吃蛇直接复用
 

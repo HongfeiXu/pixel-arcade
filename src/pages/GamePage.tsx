@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { gameRegistry } from '../games/registry'
 import { useGame } from '../hooks/useGame'
-import { useKeyboard } from '../hooks/useKeyboard'
+import { useKeyboard, DEFAULT_KEY_MAP } from '../hooks/useKeyboard'
 import { useBgm } from '../hooks/useBgm'
 import GamePad from '../components/GamePad'
 import ScoreBoard from '../components/ScoreBoard'
@@ -10,6 +10,21 @@ import NextPiecePreview from '../components/NextPiecePreview'
 import styles from './GamePage.module.css'
 
 type PagePhase = 'idle' | 'restore' | 'countdown' | 'playing' | 'paused' | 'over' | 'confirm-exit'
+
+// snake 所有方向键（含 XYAB 映射的 J/K/Z/X/Space）都要支持长按加速，
+// 覆盖默认 keyMap 里的 repeat:false
+const SNAKE_KEY_MAP = {
+  ...DEFAULT_KEY_MAP,
+  ArrowUp:   { action: 'up'   as const, repeat: true },
+  ArrowDown: { action: 'down' as const, repeat: true },
+  KeyW:      { action: 'up'   as const, repeat: true },
+  KeyS:      { action: 'down' as const, repeat: true },
+  KeyJ:      { action: 'a'    as const, repeat: true },
+  KeyZ:      { action: 'a'    as const, repeat: true },
+  KeyK:      { action: 'b'    as const, repeat: true },
+  KeyX:      { action: 'b'    as const, repeat: true },
+  Space:     { action: 'a'    as const, repeat: true },
+}
 
 export default function GamePage() {
   const { id } = useParams<{ id: string }>()
@@ -114,11 +129,12 @@ export default function GamePage() {
     }
   }, [state, pause, handleResume])
 
-  // 键盘控制
+  // 键盘控制（snake 使用专属 keyMap 让上下方向键也支持长按）
   useKeyboard({
     onAction: handleAction,
     onPauseToggle: handlePauseBtn,
     enabled: phase === 'playing',
+    keyMap: id === 'snake' ? SNAKE_KEY_MAP : undefined,
   })
 
   // 背景音乐：倒计时和游戏中播放，其余暂停
@@ -164,7 +180,7 @@ export default function GamePage() {
 
       {/* 虚拟手柄 */}
       <footer className={styles.controlArea}>
-        <GamePad onAction={handleAction} disabled={phase !== 'playing'} />
+        <GamePad onAction={handleAction} disabled={phase !== 'playing'} directionRepeat={id === 'snake'} />
       </footer>
 
       {/* 覆盖层 */}

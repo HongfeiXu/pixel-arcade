@@ -7,14 +7,17 @@ import styles from './GamePad.module.css'
 interface GamePadProps {
   onAction: (action: GameAction) => void
   disabled?: boolean
+  /** 为 true 时上/下/Y/A 也支持按住连续触发（默认 false：仅 tap） */
+  directionRepeat?: boolean
 }
 
-export default function GamePad({ onAction, disabled }: GamePadProps) {
+export default function GamePad({ onAction, disabled, directionRepeat }: GamePadProps) {
+  const UpDownBtn = directionRepeat ? RepeatButton : DpadButton
   return (
     <div className={`${styles.container} ${disabled ? styles.disabled : ''}`}>
       {/* 左侧 D-pad */}
       <div className={styles.dpad}>
-        <DpadButton
+        <UpDownBtn
           className={`${styles.dpadBtn} ${styles.dpadUp}`}
           action="up"
           onAction={onAction}
@@ -35,7 +38,7 @@ export default function GamePad({ onAction, disabled }: GamePadProps) {
           disabled={disabled}
           label={<ArrowIcon direction="right" />}
         />
-        <DpadButton
+        <UpDownBtn
           className={`${styles.dpadBtn} ${styles.dpadDown}`}
           action="down"
           onAction={onAction}
@@ -46,10 +49,10 @@ export default function GamePad({ onAction, disabled }: GamePadProps) {
 
       {/* 右侧 ABXY */}
       <div className={styles.abxy}>
-        <DpadButton className={`${styles.abxyBtn} ${styles.btnY}`} action="y" onAction={onAction} disabled={disabled} label="Y" />
+        <UpDownBtn className={`${styles.abxyBtn} ${styles.btnY}`} action="y" onAction={onAction} disabled={disabled} label="Y" />
         <RepeatButton className={`${styles.abxyBtn} ${styles.btnX}`} action="x" onAction={onAction} disabled={disabled} label="X" />
         <RepeatButton className={`${styles.abxyBtn} ${styles.btnB}`} action="b" onAction={onAction} disabled={disabled} label="B" />
-        <DpadButton className={`${styles.abxyBtn} ${styles.btnA}`} action="a" onAction={onAction} disabled={disabled} label="A" />
+        <UpDownBtn className={`${styles.abxyBtn} ${styles.btnA}`} action="a" onAction={onAction} disabled={disabled} label="A" />
       </div>
     </div>
   )

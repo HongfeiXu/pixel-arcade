@@ -9,7 +9,7 @@ interface KeyMapping {
   repeat: boolean
 }
 
-const DEFAULT_KEY_MAP: Record<string, KeyMapping> = {
+export const DEFAULT_KEY_MAP: Record<string, KeyMapping> = {
   ArrowLeft:  { action: 'left',  repeat: true },
   ArrowRight: { action: 'right', repeat: true },
   ArrowDown:  { action: 'down',  repeat: false },
@@ -18,11 +18,11 @@ const DEFAULT_KEY_MAP: Record<string, KeyMapping> = {
   KeyD:       { action: 'right', repeat: true },
   KeyS:       { action: 'down',  repeat: false },
   KeyW:       { action: 'up',    repeat: false },
-  KeyJ:       { action: 'a',     repeat: true },
-  KeyZ:       { action: 'a',     repeat: true },
-  KeyK:       { action: 'b',     repeat: true },
-  KeyX:       { action: 'b',     repeat: true },
-  Space:      { action: 'a',     repeat: true },
+  KeyJ:       { action: 'a',     repeat: false },
+  KeyZ:       { action: 'a',     repeat: false },
+  KeyK:       { action: 'b',     repeat: false },
+  KeyX:       { action: 'b',     repeat: false },
+  Space:      { action: 'a',     repeat: false },
 }
 
 const PAUSE_KEYS = new Set(['KeyP', 'Escape'])

@@ -214,17 +214,33 @@ describe('碰撞判定', () => {
   })
 })
 
-describe('加速心跳', () => {
-  test('a/b/x/y 按下时 lastAccelTime 被刷新', () => {
-    const g = makeGame()
-    g.start()
-    const before = peek(g).lastAccelTime
-    g.onInput('a')
-    expect(peek(g).lastAccelTime).toBeGreaterThan(before)
+describe('XYAB 方向映射', () => {
+  test('y=上, a=下, x=左, b=右（与 tetris 系列对齐）', () => {
+    const cases: Array<{ action: 'y' | 'a' | 'x' | 'b'; dir: Direction; needTurnFirst?: Direction }> = [
+      // x=左 需要先往上走，否则被掉头保护吃掉
+      { action: 'x', dir: 'left', needTurnFirst: 'up' },
+      { action: 'b', dir: 'right' },
+      { action: 'y', dir: 'up' },
+      { action: 'a', dir: 'down' },
+    ]
+    for (const c of cases) {
+      const g = makeGame()
+      g.start()
+      if (c.needTurnFirst) {
+        g.onInput(c.needTurnFirst)
+        peek(g).tick()
+      }
+      g.onInput(c.action)
+      expect(peek(g).pendingDirection).toBe(c.dir)
+    }
   })
+})
 
-  test('所有 4 个加速键都有效', () => {
-    const actions: Array<'a' | 'b' | 'x' | 'y'> = ['a', 'b', 'x', 'y']
+describe('长按加速心跳', () => {
+  test('任意方向输入（D-pad 或 XYAB）都刷新 lastAccelTime', () => {
+    const actions: Array<'up' | 'down' | 'left' | 'right' | 'a' | 'b' | 'x' | 'y'> = [
+      'up', 'down', 'left', 'right', 'a', 'b', 'x', 'y',
+    ]
     for (const a of actions) {
       const g = makeGame()
       g.start()
@@ -232,6 +248,14 @@ describe('加速心跳', () => {
       g.onInput(a)
       expect(peek(g).lastAccelTime).toBeGreaterThan(before)
     }
+  })
+
+  test('pause 键不刷新 lastAccelTime', () => {
+    const g = makeGame()
+    g.start()
+    const before = peek(g).lastAccelTime
+    g.onInput('pause')
+    expect(peek(g).lastAccelTime).toBe(before)
   })
 })
 

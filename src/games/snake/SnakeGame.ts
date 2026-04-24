@@ -82,26 +82,34 @@ export class SnakeGame implements GameInstance {
   onInput(action: GameAction): void {
     if (this.state !== 'playing') return
 
+    // XYAB 等价于 D-pad 四方向：y=上 a=下 x=左 b=右（和 tetris 系列对齐）
+    let newDir: Direction | null = null
     switch (action) {
       case 'up':
-        if (this.direction !== 'down') this.pendingDirection = 'up'
-        break
-      case 'down':
-        if (this.direction !== 'up') this.pendingDirection = 'down'
-        break
-      case 'left':
-        if (this.direction !== 'right') this.pendingDirection = 'left'
-        break
-      case 'right':
-        if (this.direction !== 'left') this.pendingDirection = 'right'
-        break
-      case 'a':
-      case 'b':
-      case 'x':
       case 'y':
-        this.lastAccelTime = performance.now()
-        break
+        newDir = 'up'; break
+      case 'down':
+      case 'a':
+        newDir = 'down'; break
+      case 'left':
+      case 'x':
+        newDir = 'left'; break
+      case 'right':
+      case 'b':
+        newDir = 'right'; break
+      default:
+        return
     }
+
+    // 掉头保护：过滤反向
+    const opposite: Record<Direction, Direction> = {
+      up: 'down', down: 'up', left: 'right', right: 'left',
+    }
+    if (newDir !== opposite[this.direction]) {
+      this.pendingDirection = newDir
+    }
+    // 任意方向键输入都刷加速心跳（长按 = 持续加速）
+    this.lastAccelTime = performance.now()
   }
 
   saveState(): string {
