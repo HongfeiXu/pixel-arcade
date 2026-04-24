@@ -61,15 +61,37 @@ export class SnakeRenderer {
       this.drawCell(flash.pos, COLOR_FLASH)
     }
 
+    if (segments.length > 0) {
+      const head = segments[0]
+      // 眼睛：在头方格正中画 1×1 深色点（根据方向偏移）
+      const cs = this.cellSize
+      const cx = head.x * cs + cs / 2
+      const cy = head.y * cs + cs / 2
+      this.ctx.fillStyle = '#1A1A2E'
+      this.ctx.fillRect(Math.floor(cx - 1), Math.floor(cy - 1), 2, 2)
+    }
+
     ctx.restore()
   }
 
   private drawCell(p: Point, color: string): void {
     const cs = this.cellSize
     const ctx = this.ctx
-    // 1px 内缩制造像素描边
+    // 外圈深色描边（提升像素感）
     ctx.fillStyle = color
     ctx.fillRect(p.x * cs + 1, p.y * cs + 1, cs - 2, cs - 2)
+    // 内亮高光（左上 1/3 区域）
+    ctx.fillStyle = this.lighten(color)
+    ctx.fillRect(p.x * cs + 2, p.y * cs + 2, Math.floor((cs - 4) / 3), Math.floor((cs - 4) / 3))
+  }
+
+  private lighten(hex: string): string {
+    // 简单取高亮：RGB 每通道 +40 上限 255
+    const n = parseInt(hex.slice(1), 16)
+    const r = Math.min(255, ((n >> 16) & 0xff) + 40)
+    const g = Math.min(255, ((n >> 8) & 0xff) + 40)
+    const b = Math.min(255, (n & 0xff) + 40)
+    return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('')
   }
 
   private drawGrid(): void {
