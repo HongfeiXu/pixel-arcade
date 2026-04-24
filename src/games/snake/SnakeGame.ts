@@ -1,6 +1,6 @@
 import type { GameInstance, GameConfig, GameAction, GameState, SfxEvent } from '../types'
 import type { Direction, Point } from './types'
-import { calcCellSize, COLS, ROWS, TICK_INTERVAL, SHAKE_DURATION, SHAKE_INTENSITY } from './constants'
+import { calcCellSize, COLS, ROWS, TICK_INTERVAL, TICK_INTERVAL_FAST, ACCEL_TIMEOUT, SHAKE_DURATION, SHAKE_INTENSITY } from './constants'
 import { spawnFood } from './food'
 import { SnakeRenderer } from './renderer'
 
@@ -95,7 +95,12 @@ export class SnakeGame implements GameInstance {
       case 'right':
         if (this.direction !== 'left') this.pendingDirection = 'right'
         break
-      // a/b/x/y Task 5 填充
+      case 'a':
+      case 'b':
+      case 'x':
+      case 'y':
+        this.lastAccelTime = performance.now()
+        break
     }
   }
 
@@ -135,12 +140,13 @@ export class SnakeGame implements GameInstance {
     }
   }
 
-  private update(delta: number, _now: number): void {
+  private update(delta: number, now: number): void {
     if (this.shakeTimer > 0) this.shakeTimer = Math.max(0, this.shakeTimer - delta)
 
+    const fastMode = now - this.lastAccelTime < ACCEL_TIMEOUT
+    const interval = fastMode ? TICK_INTERVAL_FAST : TICK_INTERVAL
+
     this.accumulatedTime += delta
-    const interval = TICK_INTERVAL  // Task 5 改成 fastMode 三元
-    void this.lastAccelTime
     while (this.accumulatedTime >= interval) {
       this.accumulatedTime -= interval
       this.tick()
