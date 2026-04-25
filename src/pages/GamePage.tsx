@@ -7,6 +7,7 @@ import { useBgm } from '../hooks/useBgm'
 import GamePad from '../components/GamePad'
 import ScoreBoard from '../components/ScoreBoard'
 import NextPiecePreview from '../components/NextPiecePreview'
+import { isNewRecord as checkIsNewRecord } from './gameRecord'
 import styles from './GamePage.module.css'
 
 type PagePhase = 'idle' | 'restore' | 'countdown' | 'playing' | 'paused' | 'over' | 'confirm-exit'
@@ -43,12 +44,12 @@ export default function GamePage() {
   const [phase, setPhase] = useState<PagePhase>('idle')
   const [countdown, setCountdown] = useState(3)
   const [isNewRecord, setIsNewRecord] = useState(false)
-  const initialHighScoreRef = useRef(0)
+  const roundStartHighScoreRef = useRef(0)
 
-  // 记录进入游戏时的历史最高分，用于判断新纪录
-  useEffect(() => {
-    initialHighScoreRef.current = highScore
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const captureRecordBaseline = useCallback(() => {
+    roundStartHighScoreRef.current = highScore
+    setIsNewRecord(false)
+  }, [highScore])
 
   // 游戏状态变化同步到 page phase
   useEffect(() => {
@@ -56,12 +57,13 @@ export default function GamePage() {
       setPhase('paused')
     }
     if (state === 'over' && phase !== 'over') {
-      setIsNewRecord(score > 0 && score > initialHighScoreRef.current)
+      setIsNewRecord(checkIsNewRecord(score, roundStartHighScoreRef.current))
       setPhase('over')
     }
   }, [state, phase, score])
 
   const startCountdown = useCallback(() => {
+    captureRecordBaseline()
     setPhase('countdown')
     setCountdown(3)
 
@@ -78,7 +80,7 @@ export default function GamePage() {
     }, 800)
 
     return () => clearInterval(timer)
-  }, [start])
+  }, [start, captureRecordBaseline])
 
   // 检测存档 → 决定初始 phase（等 hasSavedState 从 null 变为确定值后再决策）
   useEffect(() => {
@@ -96,9 +98,10 @@ export default function GamePage() {
   }, [resume])
 
   const handleRestart = useCallback(() => {
+    captureRecordBaseline()
     restart()
     setPhase('playing')
-  }, [restart])
+  }, [restart, captureRecordBaseline])
 
   const handleBack = useCallback(() => {
     if (state === 'playing') {
@@ -141,9 +144,10 @@ export default function GamePage() {
   useBgm(phase === 'countdown' || phase === 'playing')
 
   const handleRestoreLoad = useCallback(() => {
+    captureRecordBaseline()
     loadSaved()
     setPhase('playing')
-  }, [loadSaved])
+  }, [loadSaved, captureRecordBaseline])
 
   const handleRestoreNew = useCallback(() => {
     clearSave()
