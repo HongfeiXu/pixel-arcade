@@ -55,6 +55,17 @@ Production URL: https://hongfeixu.github.io/pixel-arcade/
 - Keep `docs/IDEAS.md` as a lightweight idea pool; do not treat ideas there as committed roadmap items.
 - Do not stop after partial implementation when the requested scope is clear. Carry work through implementation, verification, and status reporting.
 
+## Preferred Codex Workflow
+
+- For bug fixes, identify the root cause before changing code. Add or update a focused test when the behavior is testable.
+- For new features or behavior changes, discuss the design first, then update or create the relevant plan or feature document before implementation.
+- For visual and UI polish, keep the design discussion lightweight, but state the intended visual change before editing.
+- For multi-step implementation, keep the plan updated as tasks are completed.
+- Before reporting completion, run the relevant verification command:
+  - `npm run build` for code changes
+  - `npm run test:run` for tested game logic or bug fixes
+- Keep changes scoped. Avoid unrelated refactors unless they are necessary for the requested change.
+
 ## Verification
 
 - Run `npm run build` before claiming code changes are complete.
