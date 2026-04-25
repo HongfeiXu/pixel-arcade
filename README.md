@@ -13,6 +13,7 @@ https://hongfeixu.github.io/pixel-arcade/
 | 俄罗斯方块（简单） | ✅ 已完成 |
 | 俄罗斯方块 | ✅ 已完成 |
 | 反重力方块 | ✅ 已完成 |
+| 贪吃蛇 | 🛠 M4 优化中 |
 
 ## 致谢
 
