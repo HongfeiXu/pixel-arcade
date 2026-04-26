@@ -63,10 +63,19 @@ export function useSfx(): (event: SfxEvent) => void {
     const gain = gainRef.current
     const buf = buffersRef.current[event]
     if (!ctx || !gain || !buf) return
-    const src = ctx.createBufferSource()
-    src.buffer = buf
-    src.connect(gain)
-    src.start(0)
+
+    const play = () => {
+      const src = ctx.createBufferSource()
+      src.buffer = buf
+      src.connect(gain)
+      src.start(0)
+    }
+
+    if (ctx.state === 'suspended') {
+      ctx.resume().then(play).catch(() => {})
+    } else {
+      play()
+    }
   }, [])
 }
 

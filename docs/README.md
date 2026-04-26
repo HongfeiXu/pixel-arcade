@@ -25,6 +25,7 @@
 | [game-api.md](dev/game-api.md) | 游戏接口规范（GameMeta、GameInstance、GameAction） |
 | [pwa.md](dev/pwa.md) | PWA 配置（Manifest、Service Worker、iOS 适配） |
 | [deploy.md](dev/deploy.md) | 构建与部署（GitHub Pages + Actions） |
+| [troubleshooting/audio-sfx.md](dev/troubleshooting/audio-sfx.md) | 音效排障记录（Web Audio、BGM 与 SFX） |
 
 ## 素材资源 (`art/`)
 
