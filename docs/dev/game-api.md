@@ -39,6 +39,7 @@ interface GameInstance {
 
   // 事件回调
   onScoreChange?: (score: number) => void;
+  onScoreGain?: (points: number) => void;
   onGameOver?: (finalScore: number) => void;
   onStateChange?: (state: 'idle' | 'playing' | 'paused' | 'over') => void;
   onSfx?: (event: SfxEvent) => void;

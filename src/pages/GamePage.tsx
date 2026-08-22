@@ -6,6 +6,7 @@ import { useKeyboard, DEFAULT_KEY_MAP } from '../hooks/useKeyboard'
 import { useBgm } from '../hooks/useBgm'
 import GamePad from '../components/GamePad'
 import ScoreBoard from '../components/ScoreBoard'
+import ScorePopup from '../components/ScorePopup'
 import NextPiecePreview from '../components/NextPiecePreview'
 import { isNewRecord as checkIsNewRecord } from './gameRecord'
 import styles from './GamePage.module.css'
@@ -35,7 +36,7 @@ export default function GamePage() {
   const canvasAreaRef = useRef<HTMLDivElement>(null)
 
   const {
-    canvasRef, state, score, highScore, nextPiece,
+    canvasRef, state, score, scoreGain, highScore, nextPiece,
     hasSavedState, savedScore,
     start, pause, resume, restart,
     handleAction, loadSaved, clearSave,
@@ -180,6 +181,7 @@ export default function GamePage() {
       {/* Canvas 游戏区域 */}
       <main className={styles.canvasArea} ref={canvasAreaRef}>
         <canvas ref={canvasRef} />
+        {scoreGain && <ScorePopup key={scoreGain.id} points={scoreGain.points} />}
       </main>
 
       {/* 虚拟手柄 */}

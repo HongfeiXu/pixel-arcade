@@ -5,11 +5,18 @@ import { useSfx } from './useSfx'
 
 const STORAGE_PREFIX = 'pixelarcade_'
 
+export interface ScoreGainFeedback {
+  id: number
+  points: number
+}
+
 export function useGame(gameId: string, containerRef: React.RefObject<HTMLElement | null>) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const instanceRef = useRef<GameInstance | null>(null)
+  const scoreGainIdRef = useRef(0)
   const [state, setState] = useState<GameState>('idle')
   const [score, setScore] = useState(0)
+  const [scoreGain, setScoreGain] = useState<ScoreGainFeedback | null>(null)
   const [nextPiece, setNextPiece] = useState<string | null>(null)
   const [highScore, setHighScore] = useState(0)
   const [hasSavedState, setHasSavedState] = useState<boolean | null>(null)
@@ -45,6 +52,10 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
         }
         return prev
       })
+    }
+    instance.onScoreGain = (points) => {
+      scoreGainIdRef.current++
+      setScoreGain({ id: scoreGainIdRef.current, points })
     }
     instance.onGameOver = () => {
       setState('over')
@@ -128,6 +139,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
   }, [gameId, containerRef, playSfx])
 
   const start = useCallback(() => {
+    setScoreGain(null)
     instanceRef.current?.start()
     setNextPiece(instanceRef.current?.getNextPieceType?.() ?? null)
   }, [])
@@ -148,6 +160,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     localStorage.removeItem(STORAGE_PREFIX + gameId + '_state')
     setHasSavedState(false)
     setScore(0)
+    setScoreGain(null)
     setHighScore(readHighScore(gameId))
     instanceRef.current?.start()
   }, [gameId])
@@ -161,6 +174,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     if (!instance) return
     const savedData = localStorage.getItem(STORAGE_PREFIX + gameId + '_state')
     if (savedData) {
+      setScoreGain(null)
       instance.loadState(savedData)
       setHasSavedState(false)
       const parsed = JSON.parse(savedData)
@@ -178,6 +192,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     canvasRef,
     state,
     score,
+    scoreGain,
     highScore,
     nextPiece,
     hasSavedState,

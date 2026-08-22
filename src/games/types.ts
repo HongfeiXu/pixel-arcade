@@ -44,6 +44,7 @@ export interface GameInstance {
 
   // 事件回调
   onScoreChange?: (score: number) => void
+  onScoreGain?: (points: number) => void
   onGameOver?: (finalScore: number) => void
   onStateChange?: (state: GameState) => void
   onNextPieceChange?: (pieceType: string | null) => void

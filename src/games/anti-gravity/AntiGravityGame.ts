@@ -9,6 +9,7 @@ import { ALL_PIECE_TYPES, getShape } from './pieces'
 import { createBoard, isValidPosition, lockPiece, findFullRows, removeRows, isGameOver } from './board'
 import { PieceBag } from './bag'
 import { AntiGravityRenderer } from './renderer'
+import { getLineClearScore } from '../shared/tetromino/scoring'
 
 export interface AntiGravityOptions {
   pieceTypes?: PieceType[]
@@ -17,6 +18,7 @@ export interface AntiGravityOptions {
 export class AntiGravityGame implements GameInstance {
   // --- GameInstance 回调 ---
   onScoreChange?: (score: number) => void
+  onScoreGain?: (points: number) => void
   onGameOver?: (finalScore: number) => void
   onStateChange?: (state: GameState) => void
   onNextPieceChange?: (pieceType: string | null) => void
@@ -217,7 +219,9 @@ export class AntiGravityGame implements GameInstance {
 
     if (this.animTimer >= AntiGravityGame.ANIM_TOTAL) {
       this.animating = false
-      this.score += this.animRows.length
+      const points = getLineClearScore(this.animRows.length)
+      this.score += points
+      this.onScoreGain?.(points)
       this.onScoreChange?.(this.score)
       removeRows(this.board, this.animRows)
       this.animRows = []

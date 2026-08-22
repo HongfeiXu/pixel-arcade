@@ -9,6 +9,7 @@ import { ALL_PIECE_TYPES, getShape } from './pieces'
 import { createBoard, isValidPosition, lockPiece, findFullRows, removeRows, isGameOver } from './board'
 import { PieceBag } from './bag'
 import { TetrisRenderer } from './renderer'
+import { getLineClearScore } from '../shared/tetromino/scoring'
 
 export interface TetrisOptions {
   pieceTypes?: PieceType[]
@@ -17,6 +18,7 @@ export interface TetrisOptions {
 export class TetrisGame implements GameInstance {
   // --- GameInstance 回调 ---
   onScoreChange?: (score: number) => void
+  onScoreGain?: (points: number) => void
   onGameOver?: (finalScore: number) => void
   onStateChange?: (state: GameState) => void
   onNextPieceChange?: (pieceType: string | null) => void
@@ -220,7 +222,9 @@ export class TetrisGame implements GameInstance {
     // 动画结束
     if (this.animTimer >= TetrisGame.ANIM_TOTAL) {
       this.animating = false
-      this.score += this.animRows.length
+      const points = getLineClearScore(this.animRows.length)
+      this.score += points
+      this.onScoreGain?.(points)
       this.onScoreChange?.(this.score)
       removeRows(this.board, this.animRows)
       this.animRows = []

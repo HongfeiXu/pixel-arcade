@@ -42,6 +42,8 @@
   align-items: center;
   justify-content: center;
   min-height: 0;
+  position: relative;
+  overflow: hidden;
 }
 
 .controlArea {

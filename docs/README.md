@@ -41,6 +41,7 @@
 | [feature-002-realtime-highscore.md](dev/M2/feature-002-realtime-highscore.md) | 最高分实时更新 |
 | [feature-003-visual-feedback.md](dev/M2/feature-003-visual-feedback.md) | 消行动画与震屏反馈 |
 | [feature-004-sfx.md](dev/M2/feature-004-sfx.md) | 音效系统 |
+| [feature-007-score-feedback.md](dev/M2/feature-007-score-feedback.md) | 俄罗斯方块三级得分浮动反馈 |
 
 ## M3 迭代记录 (`dev/M3/`)
 
