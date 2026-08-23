@@ -55,3 +55,17 @@
 ### 待继续
 
 - **体验优化与收口**：M4 仍保留小优化空间，完成后再标记为里程碑完成
+
+## M5 — TV Mode 📺
+
+### 已完成
+
+- **输入与焦点层**：标准 key/code 与旧 TV keyCode 归一化；大厅四列空间焦点、覆盖层线性焦点及焦点恢复
+- **大厅 TV 布局**：16:9 四列安全区、遥控 Select 激活、高对比焦点态，保留手机双列触控布局
+- **GamePage TV 布局与分流**：横向三栏、隐藏 TV 触控区；游戏方向键沿用现有 DAS，Select 映射 `a`，Back 按 playing → paused → lobby 两段式处理
+- **PWA 方向**：manifest orientation 调整为 `natural`
+- **自动化验证**：输入归一化、空间焦点和 Back phase 路由已覆盖 Vitest
+
+### 待继续
+
+- **真机验收**：Sony 型号/系统/浏览器或 WebView 环境确认后，验证真实 DOM 键值、Back 是否被宿主消费、720p/1080p overscan、长按和安装态

@@ -12,7 +12,7 @@
   "short_name": "像素游戏厅",
   "start_url": "/",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "natural",
   "background_color": "#1A1A2E",
   "theme_color": "#1A1A2E",
   "icons": [
@@ -24,7 +24,7 @@
 
 关键点：
 - `display: standalone` — 隐藏浏览器地址栏，像原生 App
-- `orientation: portrait` — 锁定竖屏
+- `orientation: natural` — 手机安装态沿用自然竖屏，TV 沿用自然横屏；实际布局仍由响应式 TV Mode 判断负责
 - `background_color` 和 `theme_color` 与应用背景色一致，启动画面无白屏闪烁
 
 ## Service Worker

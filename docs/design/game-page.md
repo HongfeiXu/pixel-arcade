@@ -56,7 +56,9 @@ Canvas 仅包含纯棋盘（不含 HUD），棋盘逻辑高度由具体游戏决
 
 ### 宽屏适配
 
-容器设置 `max-width: 480px; margin: 0 auto`，在桌面浏览器上居中显示，保持手机端比例。
+默认手机模式继续使用 `max-width: 480px; margin: 0 auto`，保持竖屏触控布局。TV Mode 使用横向三栏：左侧游戏名、下一个预览、分数和状态；中间为按容器尺寸等比计算的 Canvas；右侧为遥控器提示。TV 下隐藏触控 GamePad 和顶部触控按钮，不卸载或改变手机分支的指针事件。
+
+TV Select/OK 统一映射为现有 `a` 动作。游戏中 Back 第一次进入暂停层，暂停层第二次 Back 直接回大厅；restore、countdown 和 over 的 Back 也回大厅，倒计时退出会先清理 timer。覆盖层使用上下方向键移动焦点，Select 激活当前按钮。
 
 ## 背景音乐（BGM）
 

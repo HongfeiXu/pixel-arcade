@@ -117,6 +117,72 @@
   transform: scale(0.95);
 }
 
+.tvMode {
+  max-width: none;
+  padding: 4vh 5vw;
+}
+
+.tvMode .header {
+  padding: 0 0 clamp(12px, 2.2vh, 28px);
+}
+
+.tvMode .title {
+  font-size: clamp(20px, 2.4vw, 38px);
+  line-height: 1.4;
+}
+
+.tvMode .grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 36px);
+  padding: clamp(10px, 1.5vw, 24px);
+  scroll-padding: clamp(10px, 1.5vw, 24px);
+}
+
+.tvMode .card {
+  padding: clamp(10px, 1.2vw, 20px);
+  border-width: clamp(2px, 0.2vw, 4px);
+  transition: transform 100ms ease, border-color 100ms ease, box-shadow 100ms ease;
+}
+
+.tvMode .cardName,
+.tvMode .cardScore {
+  font-size: clamp(10px, 1vw, 18px);
+  line-height: 1.5;
+}
+
+.tvMode .cardName {
+  margin-bottom: clamp(4px, 0.6vw, 10px);
+}
+
+.tvMode .footer {
+  padding: clamp(12px, 2vh, 24px) 0 0;
+}
+
+.tvMode .soundToggle {
+  font-size: clamp(10px, 1vw, 18px);
+  padding: clamp(10px, 1.1vw, 18px) clamp(20px, 2.2vw, 40px);
+  transition: transform 100ms ease, border-color 100ms ease, box-shadow 100ms ease;
+}
+
+.tvMode .card:focus-visible,
+.tvMode .soundToggle:focus-visible,
+.tvMode .card[data-focused='true'],
+.tvMode .soundToggle[data-focused='true'] {
+  outline: 4px solid #fff;
+  outline-offset: 4px;
+  border-color: #00e5ff;
+  box-shadow: 0 0 0 4px #ffd600, 0 0 24px rgba(0, 229, 255, 0.9);
+  transform: scale(1.06);
+  z-index: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tvMode .card,
+  .tvMode .soundToggle {
+    transition: none;
+  }
+}
+
 /* 抖动动画 — coming_soon 卡片点击 */
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
