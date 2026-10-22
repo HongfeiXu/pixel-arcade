@@ -1,3 +1,5 @@
+import type { PuzzleControls } from './sokoban/types'
+
 export interface GameMeta {
   id: string
   name: string
@@ -26,7 +28,7 @@ export interface GameConfig {
   soundEnabled: boolean
 }
 
-export interface GameInstance {
+export interface GameInstance extends Partial<PuzzleControls> {
   // 生命周期
   init(canvas: HTMLCanvasElement, config: GameConfig): void
   start(): void

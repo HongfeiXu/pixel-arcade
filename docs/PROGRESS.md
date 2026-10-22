@@ -56,6 +56,17 @@
 
 - **体验优化与收口**：M4 仍保留小优化空间，完成后再标记为里程碑完成
 
+## M6 — 推箱子（本地实现完成，验收待接续）
+
+- **设计先行**：[feature-008](dev/feature-008-sokoban.md) 明确 12 关、无计时/星级、无限撤销、主动下一关与遥控单步策略。
+- **实现**：新增纯 TS `SokobanGame`、动态尺寸像素 Canvas、独立 React 页面；大厅注册与图标；原有三个游戏目录和通用 GamePage/TV 输入模块不变。
+- **持久化**：useGame 可选 puzzle 能力桥接，逐步自动保存，恢复当前关、完成集合及完整撤销历史；损坏存档回退，存储不可用时仍可玩。
+- **输入**：竖屏大 D-pad 与常显撤销；方向键/WASD、Z/Backspace；Sony 旧 keyCode 沿用归一化，忽略 repeat/未松开重复，OK 菜单覆盖撤销、重来、选关和大厅。
+- **自动化**：独立 BFS 验证全部关卡可解，再通过引擎回放并撤销回初始状态；核心、单步输入、焦点与真实 Hook 存档生命周期测试。
+- **本地验证**：`npm run test:run -- --reporter=verbose`：11 文件 / 106 测试通过；`npm run build`：TypeScript + Vite + PWA 通过；`git diff --check` 无错误。Browserslist 数据过期警告不影响构建，未额外更新依赖。
+- **浏览器验收**：三种手机宽度 × 全部 12 关，共 36 次布局检查；通关/撤销/刷新恢复、TV 菜单与单步防重复通过；修复第五张大厅卡片标题裁切，四款旧游戏页面启动冒烟通过。详见 [验收记录](sokoban-verification.md)。
+- **待验收**：Sony 真机按键与长按、iPhone 实机；用户已授权发布，部署结果以对应 GitHub Actions 与线上回读验收为准。
+
 ## M5 — TV Mode 📺
 
 ### 已完成

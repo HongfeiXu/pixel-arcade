@@ -21,7 +21,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 permissions:
   contents: read
@@ -63,7 +63,7 @@ jobs:
 
 1. 仓库 Settings → Pages
 2. Source 选择 "GitHub Actions"
-3. 推送到 main 后自动构建部署
+3. 推送到 master 后自动构建部署
 
 ## Vite base 路径
 
@@ -83,7 +83,7 @@ export default defineConfig({
 ## 发布流程
 
 ```
-本地开发 → git push main → Actions 自动构建 → GitHub Pages 更新
+本地开发 → git push origin master → Actions 自动构建 → GitHub Pages 更新
 ```
 
 推送后约 1-2 分钟完成部署。可在仓库 Actions 标签页查看构建状态。

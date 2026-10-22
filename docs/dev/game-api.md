@@ -126,6 +126,12 @@ export const gameRegistry: GameEntry[] = [
 
 `saveState()` 返回的 JSON 字符串由 Hook 存入 `pixelarcade_{gameId}_state`，Hook 取出后原样传给 `loadState()`。GameInstance 不需要知道存储细节。
 
+## 回合制解谜的可选能力
+
+`GameInstance` 通过 `Partial<PuzzleControls>` 提供可选 `getPuzzleStatus`、`onPuzzleChange`、`selectLevel`、`undo`、`restartLevel`；既有游戏不需要实现。`PuzzleStatus` 为当前关卡下标、已完成集合、是否通关、是否可撤销，不复用分数/星星。
+
+推箱子专用 React 页面使用同一个 `useGame`：Hook 自动恢复 puzzle 存档，并在每次 `onPuzzleChange` 写入；通用暂停/切后台/pagehide/卸载保存继续有效。纯回合制只在变化/resize 时绘制，无需持续 rAF。存档携带版本和操作历史，由核心重放验证。
+
 ## 新增游戏清单
 
 添加一个新游戏需要：

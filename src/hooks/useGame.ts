@@ -2,6 +2,7 @@ import { useRef, useState, useEffect, useCallback } from 'react'
 import type { GameAction, GameState, GameInstance } from '../games/types'
 import { gameRegistry } from '../games/registry'
 import { useSfx } from './useSfx'
+import type { PuzzleStatus } from '../games/sokoban/types'
 
 const STORAGE_PREFIX = 'pixelarcade_'
 
@@ -22,6 +23,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
   const [hasSavedState, setHasSavedState] = useState<boolean | null>(null)
   const [savedScore, setSavedScore] = useState(0)
   const playSfx = useSfx()
+  const [puzzle, setPuzzle] = useState<PuzzleStatus | null>(null)
 
   // 初始化
   useEffect(() => {
@@ -65,6 +67,11 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     instance.onStateChange = (s) => { setState(s); syncNextPiece() }
     instance.onNextPieceChange = (pieceType) => { setNextPiece(pieceType) }
     instance.onSfx = playSfx
+    instance.onPuzzleChange = (status) => {
+      setPuzzle(status)
+      saveGameState(instance, gameId)
+    }
+    setPuzzle(instance.getPuzzleStatus?.() ?? null)
 
     // 计算 GameConfig — 使用容器的实际可用尺寸
     const canvas = canvasRef.current
@@ -94,8 +101,12 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     resizeObserver.observe(container)
 
     // 检查存档
-    const savedData = localStorage.getItem(STORAGE_PREFIX + gameId + '_state')
-    if (savedData) {
+    const savedData = readSavedState(gameId)
+    if (savedData && instance.getPuzzleStatus) {
+      instance.loadState(savedData)
+      if (instance.getState() === 'idle') instance.start()
+      setHasSavedState(false)
+    } else if (savedData) {
       setHasSavedState(true)
       try {
         const parsed = JSON.parse(savedData)
@@ -172,7 +183,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
   const loadSaved = useCallback(() => {
     const instance = instanceRef.current
     if (!instance) return
-    const savedData = localStorage.getItem(STORAGE_PREFIX + gameId + '_state')
+    const savedData = readSavedState(gameId)
     if (savedData) {
       setScoreGain(null)
       instance.loadState(savedData)
@@ -188,7 +199,12 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     setHasSavedState(false)
   }, [gameId])
 
+  const undoPuzzle = useCallback(() => { instanceRef.current?.undo?.() }, [])
+  const restartPuzzle = useCallback(() => { instanceRef.current?.restartLevel?.() }, [])
+  const selectPuzzleLevel = useCallback((level: number) => { instanceRef.current?.selectLevel?.(level) }, [])
+
   return {
+    puzzle, undoPuzzle, restartPuzzle, selectPuzzleLevel,
     canvasRef,
     state,
     score,
@@ -205,6 +221,10 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     loadSaved,
     clearSave,
   }
+}
+
+function readSavedState(gameId: string): string | null {
+  try { return localStorage.getItem(STORAGE_PREFIX + gameId + '_state') } catch { return null }
 }
 
 function readHighScore(gameId: string): number {

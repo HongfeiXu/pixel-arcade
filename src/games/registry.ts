@@ -3,6 +3,7 @@ import { TetrisGame } from './tetris/TetrisGame'
 import { EASY_PIECE_TYPES } from './tetris/pieces'
 import { AntiGravityGame } from './anti-gravity/AntiGravityGame'
 import { SnakeGame } from './snake/SnakeGame'
+import { SokobanGame } from './sokoban/SokobanGame'
 
 export const gameRegistry: GameEntry[] = [
   {
@@ -40,5 +41,9 @@ export const gameRegistry: GameEntry[] = [
       status: 'active',
     },
     createInstance: () => new SnakeGame(),
+  },
+  {
+    meta: { id: 'sokoban', name: '推箱子', icon: 'sokoban', status: 'active', description: '小小搬运员 · 轻松练习' },
+    createInstance: () => new SokobanGame(),
   },
 ]

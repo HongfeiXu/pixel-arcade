@@ -106,6 +106,8 @@ update() {
 /game/:id       → GamePage（通用，根据 id 从 registry 加载）
 ```
 
+推箱子使用独立 `SokobanPage`（`/game/sokoban`），复用 `useGame` 生命周期与存储，通过可选 puzzle 能力桥接关卡与撤销状态；其余游戏仍使用原 `GamePage`。纯回合制按操作/尺寸变化重绘，不运行空闲动画循环。
+
 ## 数据存储
 
 仅使用 localStorage，不需要后端。

@@ -27,6 +27,12 @@
 | [deploy.md](dev/deploy.md) | 构建与部署（GitHub Pages + Actions） |
 | [troubleshooting/audio-sfx.md](dev/troubleshooting/audio-sfx.md) | 音效排障记录（Web Audio、BGM 与 SFX） |
 
+## 新游戏实现
+
+| 文档 | 说明 |
+|------|------|
+| [feature-008-sokoban.md](dev/feature-008-sokoban.md) | 推箱子：儿童友好关卡、单步遥控、无限撤销、持久化与全关求解验证 |
+
 ## 素材资源 (`art/`)
 
 | 文档 | 说明 |

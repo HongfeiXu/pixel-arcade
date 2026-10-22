@@ -9,6 +9,11 @@ type IconConfig = {
 }
 
 const ICONS: Record<string, IconConfig> = {
+  sokoban: {
+    bg: '#3b3442', glow: '#f3c77a',
+    palette: { w: '#71849e', b: '#d3954e', x: '#513721', p: '#00c5ed', t: '#b4e49e' },
+    pixels: ['wwwwwwww', 'w......w', 'w.bbb..w', 'w.bxb..w', 'w.bbb..w', 'w.p..t.w', 'w...t.tw', 'wwwwwwww'],
+  },
   'tetris-easy': {
     bg: '#20345f',
     glow: '#7efcff',
