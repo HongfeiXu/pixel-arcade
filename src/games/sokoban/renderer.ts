@@ -1,5 +1,14 @@
 import type { GameConfig } from '../types'
-import type { Board } from './levels'
+import { LEVELS, type Board } from './levels'
+
+export const STANDARD_CELL_SIZE = 48
+const MAX_COLUMNS = Math.max(...LEVELS.flatMap(level => level.rows.map(row => row.length)))
+const MAX_ROWS = Math.max(...LEVELS.map(level => level.rows.length))
+
+export function getCellSize(config: Pick<GameConfig, 'width' | 'height'>): number {
+  // Budget for the entire level set so switching maps never changes the scale.
+  return Math.max(1, Math.floor(Math.min(STANDARD_CELL_SIZE, config.width / MAX_COLUMNS, config.height / MAX_ROWS)))
+}
 
 export function getVisibleCells(board: Board): Set<number> {
   const interior = new Set<number>()
@@ -29,7 +38,7 @@ export function getVisibleCells(board: Board): Set<number> {
 }
 
 export function renderBoard(canvas: HTMLCanvasElement, config: GameConfig, board: Board) {
-  const size = Math.max(1, Math.floor(Math.min(config.width / board.width, config.height / board.height)))
+  const size = getCellSize(config)
   const w = size * board.width, h = size * board.height, dpr = config.devicePixelRatio || 1
   canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr)
   canvas.style.width = `${w}px`; canvas.style.height = `${h}px`
@@ -38,7 +47,7 @@ export function renderBoard(canvas: HTMLCanvasElement, config: GameConfig, board
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.imageSmoothingEnabled = false
   ctx.clearRect(0, 0, w, h)
   const visible = getVisibleCells(board)
-  // 每块地砖按 16×16 像素绘制，缩放到动态格子尺寸。
+  // 每块地砖按 16×16 像素绘制，所有关卡共用显示比例。
   for (let y = 0; y < board.height; y++) for (let x = 0; x < board.width; x++) {
     const pos = y * board.width + x
     if (!visible.has(pos)) continue

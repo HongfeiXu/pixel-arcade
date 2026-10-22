@@ -1,8 +1,38 @@
 import { describe, expect, it, vi } from 'vitest'
 import { LEVELS, parseLevel } from './levels'
-import { getVisibleCells, renderBoard } from './renderer'
+import { getCellSize, STANDARD_CELL_SIZE, getVisibleCells, renderBoard } from './renderer'
 
 const parse = (rows: string[]) => parseLevel({ name: 'render fixture', hint: '', rows })
+
+describe('Sokoban stable cell size', () => {
+  it('does not enlarge tiles to fill a large screen', () => {
+    expect(getCellSize({ width: 2000, height: 1200 })).toBe(STANDARD_CELL_SIZE)
+  })
+
+  it.each([{ width: 288, height: 200 }, { width: 361, height: 520 }, { width: 1000, height: 420 }])(
+    'uses identical rendered tile sizes for every level within $width × $height', config => {
+      const ctx = {
+        setTransform() {}, clearRect() {}, save() {}, restore() {}, translate() {}, scale() {}, fillRect() {},
+        beginPath() {}, moveTo() {}, lineTo() {}, closePath() {}, stroke() {},
+      }
+      const canvas = { width: 0, height: 0, style: { width: '', height: '' }, getContext: () => ctx }
+      const sizes = new Set<number>()
+      for (const level of LEVELS) {
+        const board = parseLevel(level)
+        renderBoard(canvas as unknown as HTMLCanvasElement, { ...config, devicePixelRatio: 2, soundEnabled: false }, board)
+        const width = Number.parseFloat(canvas.style.width)
+        const height = Number.parseFloat(canvas.style.height)
+        sizes.add(width / board.width)
+        expect(width / board.width).toBe(height / board.height)
+        expect(width).toBeLessThanOrEqual(config.width)
+        expect(height).toBeLessThanOrEqual(config.height)
+        expect(canvas.width).toBe(width * 2)
+      }
+      expect([...sizes]).toEqual([getCellSize(config)])
+      expect(getCellSize(config)).toBeLessThanOrEqual(STANDARD_CELL_SIZE)
+    },
+  )
+})
 
 describe('Sokoban warehouse visibility', () => {
   it('omits Microban 21 exterior leading space and padded walls without changing the board', () => {
@@ -53,7 +83,7 @@ describe('Sokoban warehouse visibility', () => {
       imageSmoothingEnabled: true, fillStyle: '', strokeStyle: '', lineWidth: 1,
     }
     const canvas = { width: 0, height: 0, style: { width: '', height: '' }, getContext: vi.fn(() => ctx) }
-    const config = { width: 112, height: 96, devicePixelRatio: 2, soundEnabled: false }
+    const config = { width: 144, height: 112, devicePixelRatio: 2, soundEnabled: false }
     const board = parseLevel(LEVELS[12])
     const draw = () => renderBoard(canvas as unknown as HTMLCanvasElement, config, board)
     draw()
