@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding: 0 20px;
+  padding: 0 var(--gamepad-padding, 20px);
   box-sizing: border-box;
 }
 
@@ -16,14 +16,14 @@
 
 .dpad {
   display: grid;
-  grid-template-columns: 48px 48px 48px;
-  grid-template-rows: 48px 48px 48px;
-  gap: 4px;
+  grid-template-columns: repeat(3, var(--gamepad-size, 48px));
+  grid-template-rows: repeat(3, var(--gamepad-size, 48px));
+  gap: var(--gamepad-gap, 4px);
 }
 
 .dpadBtn {
-  width: 48px;
-  height: 48px;
+  width: var(--gamepad-size, 48px);
+  height: var(--gamepad-size, 48px);
   padding: 0;
   background: #2d2d5e;
   border: 2px solid #4a4a8a;
@@ -54,14 +54,14 @@
 
 .abxy {
   display: grid;
-  grid-template-columns: 48px 48px 48px;
-  grid-template-rows: 48px 48px 48px;
-  gap: 4px;
+  grid-template-columns: repeat(3, var(--gamepad-size, 48px));
+  grid-template-rows: repeat(3, var(--gamepad-size, 48px));
+  gap: var(--gamepad-gap, 4px);
 }
 
 .abxyBtn {
-  width: 48px;
-  height: 48px;
+  width: var(--gamepad-size, 48px);
+  height: var(--gamepad-size, 48px);
   padding: 0;
   border: 2px solid transparent;
   border-radius: 50%;

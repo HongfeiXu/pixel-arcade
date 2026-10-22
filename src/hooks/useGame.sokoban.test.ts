@@ -64,6 +64,24 @@ test('真实 useGame 每步自动存档、撤销、选关、重来并自动继�
   expect(storage.has('pixelarcade_scores')).toBe(false)
 })
 
+test('v1 old save continues into second numeric page; reload and undo retain both completion sets', () => {
+  storage.set(key, JSON.stringify({ version: 1, level: 0, completed: [0, 3, 11], history: ['right'] }))
+  const hook = mount()
+  hook.selectPuzzleLevel(23)
+  hook.handleAction('right')
+  const saved = storage.get(key)!
+  expect(JSON.parse(saved).level).toBe(23)
+  expect(JSON.parse(saved).history).toEqual(['right'])
+  expect(JSON.parse(saved).completed).toEqual([0, 3, 11])
+  cleanups.forEach(fn => fn()); cleanups = []
+  const resumed = mount()
+  expect(storage.get(key)).toBe(saved)
+  resumed.undoPuzzle()
+  const restored = new SokobanGame(); restored.loadState(storage.get(key)!)
+  expect(restored.getBoard()).toEqual(parseLevel(LEVELS[23]))
+  expect(restored.getPuzzleStatus().completed).toEqual([0, 3, 11])
+})
+
 test('切后台暂停，pagehide 保存，卸载清理监听器', () => {
   const hook = mount(); hook.start(); hook.selectPuzzleLevel(3)
   documentEvents.get('visibilitychange')!()

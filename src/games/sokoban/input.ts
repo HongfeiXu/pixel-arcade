@@ -14,7 +14,7 @@ export function moveLevelFocus(index: number, direction: Direction, count: numbe
   if (index === count) return direction === 'up' ? count - 1 : index
   if (direction === 'left') return index % 2 === 1 ? index - 1 : index
   if (direction === 'right') return index % 2 === 0 && index + 1 < count ? index + 1 : index
-  if (direction === 'up') return Math.max(0, index - 2)
+  if (direction === 'up') return index < 2 ? index : index - 2
   return index + 2 < count ? index + 2 : count
 }
 

@@ -43,7 +43,7 @@ export const gameRegistry: GameEntry[] = [
     createInstance: () => new SnakeGame(),
   },
   {
-    meta: { id: 'sokoban', name: '推箱子', icon: 'sokoban', status: 'active', description: '小小搬运员 · 轻松练习' },
+    meta: { id: 'sokoban', name: '推箱子', icon: 'sokoban', status: 'active', description: '24 关 · 经典仓库' },
     createInstance: () => new SokobanGame(),
   },
 ]

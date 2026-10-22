@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { SokobanGame } from './SokobanGame'
 import { LEVELS, parseLevel } from './levels'
+import metrics from '../../../docs/sokoban-expansion-solutions.json'
 import type { Direction } from './types'
 import { SingleStepInput, getSokobanKeyAction, moveLevelFocus } from './input'
 
@@ -38,14 +39,15 @@ describe('手工关卡独立求解并通过真实引擎回放', () => {
     const board = parseLevel(LEVELS[index])
     expect(board.boxes.length).toBe(board.targets.size)
     expect(board.player).toBeGreaterThanOrEqual(0)
-    expect(LEVELS[index].rows.every(row => row.length === board.width)).toBe(true)
+    expect(LEVELS[index].rows.every(row => row.length <= board.width)).toBe(true)
     const solution = solve(index)
     expect(solution).not.toBeNull()
+    if (index >= 12) expect(solution!.length).toBe(metrics[index - 12].shortestSteps)
     const game = new SokobanGame(); game.selectLevel(index)
     for (const direction of solution!) game.onInput(direction)
     expect(game.getPuzzleStatus().won).toBe(true)
     expect(game.getPuzzleStatus().completed).toContain(index)
-    console.info(`关卡 ${index + 1} ${LEVELS[index].name}：BFS 最短 ${solution!.length} 步，回放通关`)
+    console.info(`第 ${index + 1} 关：BFS 最短 ${solution!.length} 步，回放通关`)
     for (let i = 0; i < solution!.length; i++) game.undo()
     expect(game.getBoard()).toEqual(board)
     expect(game.getPuzzleStatus().canUndo).toBe(false)

@@ -1,4 +1,4 @@
-export interface Level { name: string; hint: string; rows: readonly string[] }
+export interface Level { name: string; hint: string; rows: readonly string[]; source?: { pack: 'Microban'; index: number } }
 // # 墙，空格 地板，@ 人，$ 箱，. 目标。每关手工布局。
 export const LEVELS: readonly Level[] = [
   { name: '轻轻一推', hint: '向右推一下，把木箱放到菱形上。', rows: ['#####', '#@$.#', '#####'] },
@@ -13,6 +13,19 @@ export const LEVELS: readonly Level[] = [
   { name: '转弯送礼', hint: '留出绕行的空间，不要推到角落。', rows: ['########', '# .  . #', '#      #', '#  $$  #', '#  @   #', '#      #', '########'] },
   { name: '三位朋友', hint: '一个一个慢慢来，不用着急。', rows: ['#########', '# . . . #', '# $ $ $ #', '#   @   #', '#########'] },
   { name: '小小仓库', hint: '先看看每个箱子要走哪条路。随时可以撤销。', rows: ['########', '# .  . #', '#      #', '# $ #  #', '#   $  #', '#  @   #', '########'] },
+  // Microban © David W. Skinner (April 2000), distributed with credit; see docs/sokoban-expansion-verification.md.
+  { name: '第13关', hint: '', source: { pack: 'Microban', index: 21 }, rows: ['####', '#  ####', '# . . #', '# $$#@#', '##    #', ' ######'] },
+  { name: '第14关', hint: '', source: { pack: 'Microban', index: 2 }, rows: ['######', '#    #', '# #@ #', '# $* #', '# .* #', '#    #', '######'] },
+  { name: '第15关', hint: '', source: { pack: 'Microban', index: 56 }, rows: ['#####', '#   ###', '#  $  #', '##* . #', ' #   @#', ' ######'] },
+  { name: '第16关', hint: '', source: { pack: 'Microban', index: 4 }, rows: ['########', '#      #', '# .**$@#', '#      #', '#####  #', '    ####'] },
+  { name: '第17关', hint: '', source: { pack: 'Microban', index: 1 }, rows: ['####', '# .#', '#  ###', '#*@  #', '#  $ #', '#  ###', '####'] },
+  { name: '第18关', hint: '', source: { pack: 'Microban', index: 51 }, rows: ['####', '#  ###', '#    ###', '#  $*@ #', '### .# #', '  #    #', '  ######'] },
+  { name: '第19关', hint: '', source: { pack: 'Microban', index: 28 }, rows: ['#####', '#   #', '# @ #', '# $$###', '##. . #', ' #    #', ' ######'] },
+  { name: '第20关', hint: '', source: { pack: 'Microban', index: 9 }, rows: ['#####', '#.  ##', '#@$$ #', '##   #', ' ##  #', '  ##.#', '   ###'] },
+  { name: '第21关', hint: '', source: { pack: 'Microban', index: 24 }, rows: ['# #####', '  #   #', '###$$@#', '#   ###', '#     #', '# . . #', '#######'] },
+  { name: '第22关', hint: '', source: { pack: 'Microban', index: 30 }, rows: ['####', '#  ###', '# $$ #', '#... #', '# @$ #', '#   ##', '#####'] },
+  { name: '第23关', hint: '', source: { pack: 'Microban', index: 31 }, rows: ['  ####', ' ##  #', '##@$.##', '# $$  #', '# . . #', '###   #', '  #####'] },
+  { name: '第24关', hint: '', source: { pack: 'Microban', index: 3 }, rows: ['  ####', '###  ####', '#     $ #', '# #  #$ #', '# . .#@ #', '#########'] },
 ]
 
 export interface Board { width: number; height: number; walls: Set<number>; targets: Set<number>; player: number; boxes: number[] }

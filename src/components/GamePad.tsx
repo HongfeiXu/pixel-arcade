@@ -9,10 +9,14 @@ interface GamePadProps {
   disabled?: boolean
   /** 为 true 时上/下/Y/A 也支持按住连续触发（默认 false：仅 tap） */
   directionRepeat?: boolean
+  /** 回合制游戏：所有按钮每次按下只触发一次。 */
+  singleStep?: boolean
+  actionLabels?: Partial<Record<GameAction, string>>
 }
 
-export default function GamePad({ onAction, disabled, directionRepeat }: GamePadProps) {
-  const UpDownBtn = directionRepeat ? RepeatButton : DpadButton
+export default function GamePad({ onAction, disabled, directionRepeat, singleStep, actionLabels }: GamePadProps) {
+  const UpDownBtn = directionRepeat && !singleStep ? RepeatButton : DpadButton
+  const SideBtn = singleStep ? DpadButton : RepeatButton
   return (
     <div className={`${styles.container} ${disabled ? styles.disabled : ''}`}>
       {/* 左侧 D-pad */}
@@ -24,14 +28,14 @@ export default function GamePad({ onAction, disabled, directionRepeat }: GamePad
           disabled={disabled}
           label={<ArrowIcon direction="up" />}
         />
-        <RepeatButton
+        <SideBtn
           className={`${styles.dpadBtn} ${styles.dpadLeft}`}
           action="left"
           onAction={onAction}
           disabled={disabled}
           label={<ArrowIcon direction="left" />}
         />
-        <RepeatButton
+        <SideBtn
           className={`${styles.dpadBtn} ${styles.dpadRight}`}
           action="right"
           onAction={onAction}
@@ -49,10 +53,10 @@ export default function GamePad({ onAction, disabled, directionRepeat }: GamePad
 
       {/* 右侧 ABXY */}
       <div className={styles.abxy}>
-        <UpDownBtn className={`${styles.abxyBtn} ${styles.btnY}`} action="y" onAction={onAction} disabled={disabled} label="Y" />
-        <RepeatButton className={`${styles.abxyBtn} ${styles.btnX}`} action="x" onAction={onAction} disabled={disabled} label="X" />
-        <RepeatButton className={`${styles.abxyBtn} ${styles.btnB}`} action="b" onAction={onAction} disabled={disabled} label="B" />
-        <UpDownBtn className={`${styles.abxyBtn} ${styles.btnA}`} action="a" onAction={onAction} disabled={disabled} label="A" />
+        <UpDownBtn className={`${styles.abxyBtn} ${styles.btnY}`} action="y" onAction={onAction} disabled={disabled} label={actionLabels?.y ?? "Y"} />
+        <SideBtn className={`${styles.abxyBtn} ${styles.btnX}`} action="x" onAction={onAction} disabled={disabled} label={actionLabels?.x ?? "X"} />
+        <SideBtn className={`${styles.abxyBtn} ${styles.btnB}`} action="b" onAction={onAction} disabled={disabled} label={actionLabels?.b ?? "B"} />
+        <UpDownBtn className={`${styles.abxyBtn} ${styles.btnA}`} action="a" onAction={onAction} disabled={disabled} label={actionLabels?.a ?? "A"} />
       </div>
     </div>
   )
@@ -75,7 +79,10 @@ function DpadButton({
   return (
     <button
       className={className}
+      disabled={disabled}
+      aria-label={({ up: '向上', down: '向下', left: '向左', right: '向右' } as Partial<Record<GameAction, string>>)[action] ?? (typeof label === 'string' ? label : action)}
       onPointerDown={() => !disabled && onAction(action)}
+      onClick={event => { if (event.detail === 0 && !disabled) onAction(action) }}
     >
       {label}
     </button>

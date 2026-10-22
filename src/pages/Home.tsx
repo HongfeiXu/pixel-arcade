@@ -116,7 +116,7 @@ export default function Home() {
             </div>
             <div className={styles.cardName}>{entry.meta.name}</div>
             <div className={styles.cardScore}>
-              {entry.meta.id === 'sokoban' ? '小小搬运员 · 轻松练习' : `⭐ ${scores[entry.meta.id] != null ? scores[entry.meta.id] : '—'}`}
+              {entry.meta.id === 'sokoban' ? '24 关 · 经典仓库' : `⭐ ${scores[entry.meta.id] != null ? scores[entry.meta.id] : '—'}`}
             </div>
           </button>
         ))}

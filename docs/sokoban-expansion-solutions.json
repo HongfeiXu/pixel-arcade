@@ -1,0 +1,214 @@
+[
+  {
+    "level": 13,
+    "sourceIndex": 21,
+    "rows": [
+      "####",
+      "#  ####",
+      "# . . #",
+      "# $$#@#",
+      "##    #",
+      " ######"
+    ],
+    "shortestSteps": 17,
+    "pushesOnShortest": 5,
+    "minimumPushes": 5,
+    "shortestSolution": "DLLUDLULUURDRDDLU",
+    "minimumPushSolution": "DLLUDLULUURDRDDLU"
+  },
+  {
+    "level": 14,
+    "sourceIndex": 2,
+    "rows": [
+      "######",
+      "#    #",
+      "# #@ #",
+      "# $* #",
+      "# .* #",
+      "#    #",
+      "######"
+    ],
+    "shortestSteps": 16,
+    "pushesOnShortest": 3,
+    "minimumPushes": 3,
+    "shortestSolution": "RDDLRUULDUULLDDR",
+    "minimumPushSolution": "RDDLRUULDUULLDDR"
+  },
+  {
+    "level": 15,
+    "sourceIndex": 56,
+    "rows": [
+      "#####",
+      "#   ###",
+      "#  $  #",
+      "##* . #",
+      " #   @#",
+      " ######"
+    ],
+    "shortestSteps": 23,
+    "pushesOnShortest": 6,
+    "minimumPushes": 6,
+    "shortestSolution": "UULLULLDRURDRDDLLURUULD",
+    "minimumPushSolution": "UULLULLDRURDRDDLLURUULD"
+  },
+  {
+    "level": 16,
+    "sourceIndex": 4,
+    "rows": [
+      "########",
+      "#      #",
+      "# .**$@#",
+      "#      #",
+      "#####  #",
+      "    ####"
+    ],
+    "shortestSteps": 23,
+    "pushesOnShortest": 7,
+    "minimumPushes": 7,
+    "shortestSolution": "ULLDLDRUURRDLLRRDDLURUL",
+    "minimumPushSolution": "ULLDLDRUURRDLLRRDDLURUL"
+  },
+  {
+    "level": 17,
+    "sourceIndex": 1,
+    "rows": [
+      "####",
+      "# .#",
+      "#  ###",
+      "#*@  #",
+      "#  $ #",
+      "#  ###",
+      "####"
+    ],
+    "shortestSteps": 33,
+    "pushesOnShortest": 8,
+    "minimumPushes": 8,
+    "shortestSolution": "DLURRRDLULLDDRULURUULDRDDRRULDLUU",
+    "minimumPushSolution": "DLURRRDLULLDDRULURUULDRDDRRULDLUU"
+  },
+  {
+    "level": 18,
+    "sourceIndex": 51,
+    "rows": [
+      "####",
+      "#  ###",
+      "#    ###",
+      "#  $*@ #",
+      "### .# #",
+      "  #    #",
+      "  ######"
+    ],
+    "shortestSteps": 34,
+    "pushesOnShortest": 8,
+    "minimumPushes": 8,
+    "shortestSolution": "RDDLLULURULDLLUURDLDRRURDLDDRRRUUL",
+    "minimumPushSolution": "RDDLLULURULDLLUURDLDRRURDLDDRRRUUL"
+  },
+  {
+    "level": 19,
+    "sourceIndex": 28,
+    "rows": [
+      "#####",
+      "#   #",
+      "# @ #",
+      "# $$###",
+      "##. . #",
+      " #    #",
+      " ######"
+    ],
+    "shortestSteps": 33,
+    "pushesOnShortest": 9,
+    "minimumPushes": 9,
+    "shortestSolution": "RDULLDRDDRRULDLUULUURRDDLDRUUULDD",
+    "minimumPushSolution": "RDULLDRDDRRULDLUULUURRDDLDRUUULDD"
+  },
+  {
+    "level": 20,
+    "sourceIndex": 9,
+    "rows": [
+      "#####",
+      "#.  ##",
+      "#@$$ #",
+      "##   #",
+      " ##  #",
+      "  ##.#",
+      "   ###"
+    ],
+    "shortestSteps": 30,
+    "pushesOnShortest": 10,
+    "minimumPushes": 10,
+    "shortestSolution": "URRDULLDRDRLUURDRDDLURULDLURUL",
+    "minimumPushSolution": "URRDULLDRDRLUURDRDDLURULDLURUL"
+  },
+  {
+    "level": 21,
+    "sourceIndex": 24,
+    "rows": [
+      "# #####",
+      "  #   #",
+      "###$$@#",
+      "#   ###",
+      "#     #",
+      "# . . #",
+      "#######"
+    ],
+    "shortestSteps": 35,
+    "pushesOnShortest": 9,
+    "minimumPushes": 9,
+    "shortestSolution": "ULLDDLDDRRULUUURRDLULDDDULLDDRRUULD",
+    "minimumPushSolution": "ULLDDLDDRRULUUURRDLULDDDULLDDRRUULD"
+  },
+  {
+    "level": 22,
+    "sourceIndex": 30,
+    "rows": [
+      "####",
+      "#  ###",
+      "# $$ #",
+      "#... #",
+      "# @$ #",
+      "#   ##",
+      "#####"
+    ],
+    "shortestSteps": 21,
+    "pushesOnShortest": 5,
+    "minimumPushes": 5,
+    "shortestSolution": "ULUURDLDDDRRURUULLULD",
+    "minimumPushSolution": "DRULULUURDLDDRRRUULLULD"
+  },
+  {
+    "level": 23,
+    "sourceIndex": 31,
+    "rows": [
+      "  ####",
+      " ##  #",
+      "##@$.##",
+      "# $$  #",
+      "# . . #",
+      "###   #",
+      "  #####"
+    ],
+    "shortestSteps": 17,
+    "pushesOnShortest": 6,
+    "minimumPushes": 6,
+    "shortestSolution": "DURURDDRDDLLUULUR",
+    "minimumPushSolution": "DURURDDRDDLLUULUR"
+  },
+  {
+    "level": 24,
+    "sourceIndex": 3,
+    "rows": [
+      "  ####",
+      "###  ####",
+      "#     $ #",
+      "# #  #$ #",
+      "# . .#@ #",
+      "#########"
+    ],
+    "shortestSteps": 41,
+    "pushesOnShortest": 13,
+    "minimumPushes": 13,
+    "shortestSolution": "RUULLLULDRRRRDDLURULLLDDLLLUURRDRDLUUURDD",
+    "minimumPushSolution": "RUULLLULDRRRRDDLURULLLDDLLLUURRDRDLUUURDD"
+  }
+]

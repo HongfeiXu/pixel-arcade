@@ -1,6 +1,33 @@
 import type { GameConfig } from '../types'
 import type { Board } from './levels'
 
+export function getVisibleCells(board: Board): Set<number> {
+  const interior = new Set<number>()
+  const pending = [board.player]
+  while (pending.length) {
+    const pos = pending.pop()!
+    if (interior.has(pos) || board.walls.has(pos) || pos < 0 || pos >= board.width * board.height) continue
+    interior.add(pos)
+    const x = pos % board.width, y = Math.floor(pos / board.width)
+    // Boxes are movable: only walls bound the warehouse's floor component.
+    if (x > 0) pending.push(pos - 1)
+    if (x + 1 < board.width) pending.push(pos + 1)
+    if (y > 0) pending.push(pos - board.width)
+    if (y + 1 < board.height) pending.push(pos + board.width)
+  }
+  const visible = new Set(interior)
+  for (const pos of interior) {
+    const x = pos % board.width, y = Math.floor(pos / board.width)
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+      const nx = x + dx, ny = y + dy
+      if (nx < 0 || nx >= board.width || ny < 0 || ny >= board.height) continue
+      const neighbor = ny * board.width + nx
+      if (board.walls.has(neighbor)) visible.add(neighbor)
+    }
+  }
+  return visible
+}
+
 export function renderBoard(canvas: HTMLCanvasElement, config: GameConfig, board: Board) {
   const size = Math.max(1, Math.floor(Math.min(config.width / board.width, config.height / board.height)))
   const w = size * board.width, h = size * board.height, dpr = config.devicePixelRatio || 1
@@ -9,9 +36,12 @@ export function renderBoard(canvas: HTMLCanvasElement, config: GameConfig, board
   const ctx = canvas.getContext('2d')
   if (!ctx) return
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.imageSmoothingEnabled = false
+  ctx.clearRect(0, 0, w, h)
+  const visible = getVisibleCells(board)
   // 每块地砖按 16×16 像素绘制，缩放到动态格子尺寸。
   for (let y = 0; y < board.height; y++) for (let x = 0; x < board.width; x++) {
     const pos = y * board.width + x
+    if (!visible.has(pos)) continue
     ctx.save(); ctx.translate(x * size, y * size); ctx.scale(size / 16, size / 16)
     const rect = (color: string, a: number, b: number, c: number, d: number) => { ctx.fillStyle = color; ctx.fillRect(a,b,c,d) }
     rect('#c9bf9e',0,0,16,16); rect('#e7ddbb',1,1,14,14); rect('#d4c9a8',3,12,2,1)
