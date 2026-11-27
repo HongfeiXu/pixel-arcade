@@ -1,10 +1,11 @@
-import type { GameAction, GameConfig, GameInstance, GameState } from '../types'
+import type { GameAction, GameConfig, GameInstance, GameState, RewardKind } from '../types'
 import { LEVELS, parseLevel } from './levels'
 import type { Direction, PuzzleControls, PuzzleStatus } from './types'
 import { renderBoard } from './renderer'
 
 const DIRECTIONS: readonly Direction[] = ['up', 'down', 'left', 'right']
 export class SokobanGame implements GameInstance, PuzzleControls {
+  onReward?: (kind: RewardKind) => void
   onStateChange?: (state: GameState) => void
   onPuzzleChange?: (status: PuzzleStatus) => void
   private state: GameState = 'idle'
@@ -46,10 +47,13 @@ export class SokobanGame implements GameInstance, PuzzleControls {
   onInput(action: GameAction) {
     if (this.state !== 'playing' || this.won() || !DIRECTIONS.includes(action as Direction)) return
     const direction = action as Direction
+    const before = this.board.boxes.filter(box => this.board.targets.has(box)).length
     if (!this.move(direction)) return
     this.history.push(direction)
     if (this.won()) this.completed.add(this.level)
     this.changed()
+    if (this.won()) this.onReward?.('victory')
+    else if (this.board.boxes.filter(box => this.board.targets.has(box)).length > before) this.onReward?.('target')
   }
   saveState() { return JSON.stringify({ version: 1, level: this.level, completed: [...this.completed], history: this.history }) }
   loadState(data: string) {

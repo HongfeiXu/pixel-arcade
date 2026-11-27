@@ -1,6 +1,6 @@
 # 🎮 Pixel Arcade — 像素游戏厅
 
-一个面向幼儿的经典小游戏合集 PWA，像素风格，移动端优先，并支持大屏 TV 遥控模式。
+一个面向幼儿的经典小游戏合集 PWA，像素风格，移动端优先，兼容电脑键盘和鼠标（网页版 TV 模式已停用）。
 
 ## 在线体验
 
@@ -20,7 +20,7 @@ https://hongfeixu.github.io/pixel-arcade/
 
 24 关：保留原 1–12 关，13–24 关选用 David W. Skinner 的经典 Microban 小型仓库布局。仅显示关号，无教学提示或儿童叙事；选关按数字范围 1–12 / 13–24 分页，全部开放。没有计时、分数或星级，支持无限撤销、重来和本机自动继续（含撤销历史、旧 version 1 存档）。
 
-界面复用其他 Arcade 游戏的顶栏、暂停菜单、TV 三栏与 D-pad/ABXY：手机方向键单次移动，右侧按钮为撤销/重来/选关/菜单；电脑方向键/WASD 移动、Z/Backspace 撤销、Enter 菜单；TV 每按一次走一步，OK/返回打开菜单，返回逐层退出选关。通关后主动选下一关，也可撤销。
+界面复用其他 Arcade 游戏的顶栏、暂停菜单与 D-pad/ABXY：手机方向键单次移动，右侧按钮为撤销/重来/选关/菜单；电脑方向键/WASD 移动、Z/Backspace 撤销、Enter 菜单。通关后主动选下一关，也可撤销。
 
 [扩展设计](docs/dev/feature-009-sokoban-expansion.md) · [本地验证与关卡指标](docs/sokoban-expansion-verification.md) · [原版设计](docs/dev/feature-008-sokoban.md)。24 关扩展已完成浏览器验收并发布（7f2c4cd）；Sony/iPhone 真机待验证。新增[固定格子尺寸优化](docs/dev/feature-010-sokoban-cell-size.md)：同一屏幕切关不改变人物和格子大小，小关卡居中留白；该优化目前仅本地完成，尚未发布。
 
@@ -33,3 +33,7 @@ Microban © David W. Skinner（April 2000），作者允许在正确署名的前
 ## 文档
 
 [docs/README.md](docs/README.md) — 完整文档索引 · [PLAN.md](docs/PLAN.md) — 路线图 · [PROGRESS.md](docs/PROGRESS.md) — 开发进度
+
+## PixelFX（本地，未发布）
+
+推箱子入目标与通关、方块消行、贪吃蛇进食新增短暂像素粒子奖励；支持减少动态效果设置。见 [Feature 011](docs/dev/feature-011-pixelfx.md)。

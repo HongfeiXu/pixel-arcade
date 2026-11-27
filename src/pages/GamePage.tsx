@@ -1,3 +1,4 @@
+import PixelReward from '../components/PixelReward'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { gameRegistry } from '../games/registry'
@@ -43,7 +44,7 @@ export default function GamePage() {
   const countdownTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const {
-    canvasRef, state, score, scoreGain, highScore, nextPiece,
+    canvasRef, reward, state, score, scoreGain, highScore, nextPiece,
     hasSavedState, savedScore,
     start, pause, resume, restart,
     handleAction, loadSaved, clearSave,
@@ -284,6 +285,7 @@ export default function GamePage() {
       {/* Canvas 游戏区域 */}
       <main className={styles.canvasArea} ref={canvasAreaRef}>
         <canvas ref={canvasRef} />
+        {reward && <PixelReward key={reward.id} kind={reward.kind} />}
         {scoreGain && <ScorePopup key={scoreGain.id} points={scoreGain.points} />}
       </main>
 

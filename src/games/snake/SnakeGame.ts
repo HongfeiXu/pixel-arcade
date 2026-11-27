@@ -1,4 +1,4 @@
-import type { GameInstance, GameConfig, GameAction, GameState, SfxEvent } from '../types'
+import type { GameInstance, GameConfig, GameAction, GameState, SfxEvent, RewardKind } from '../types'
 import type { Direction, Point, SnakeSavedState } from './types'
 import { calcCellSize, COLS, ROWS, TICK_INTERVAL, TICK_INTERVAL_FAST, ACCEL_GAP_MAX, HOLD_ACCEL_DELAY, MAX_INPUT_QUEUE, FLASH_DURATION, SHAKE_DURATION, SHAKE_INTENSITY } from './constants'
 import { spawnFood } from './food'
@@ -6,6 +6,7 @@ import { SnakeRenderer } from './renderer'
 
 export class SnakeGame implements GameInstance {
   // --- 回调 ---
+  onReward?: (kind: RewardKind) => void
   onScoreChange?: (score: number) => void
   onGameOver?: (finalScore: number) => void
   onStateChange?: (state: GameState) => void
@@ -241,6 +242,7 @@ export class SnakeGame implements GameInstance {
     this.segments.unshift(newHead)
     if (willEat) {
       this.score++
+      this.onReward?.('score')
       this.onScoreChange?.(this.score)
       this.onSfx?.('lineClear')
       this.flashPos = { x: newHead.x, y: newHead.y }

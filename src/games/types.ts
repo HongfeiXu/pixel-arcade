@@ -28,6 +28,8 @@ export interface GameConfig {
   soundEnabled: boolean
 }
 
+export type RewardKind = 'target' | 'victory' | 'score'
+
 export interface GameInstance extends Partial<PuzzleControls> {
   // 生命周期
   init(canvas: HTMLCanvasElement, config: GameConfig): void
@@ -45,6 +47,7 @@ export interface GameInstance extends Partial<PuzzleControls> {
   onInput(action: GameAction): void
 
   // 事件回调
+  onReward?: (kind: RewardKind) => void
   onScoreChange?: (score: number) => void
   onScoreGain?: (points: number) => void
   onGameOver?: (finalScore: number) => void

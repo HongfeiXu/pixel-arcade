@@ -1,3 +1,4 @@
+import PixelReward from '../components/PixelReward'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGame } from '../hooks/useGame'
@@ -19,7 +20,7 @@ export default function SokobanPage() {
   const rootRef = useRef<HTMLDivElement>(null)
   const areaRef = useRef<HTMLElement>(null)
   const inputRef = useRef(new SingleStepInput())
-  const { canvasRef, puzzle, state, hasSavedState, start, pause, resume, handleAction, undoPuzzle, restartPuzzle, selectPuzzleLevel } = useGame('sokoban', areaRef)
+  const { canvasRef, reward, puzzle, state, hasSavedState, start, pause, resume, handleAction, undoPuzzle, restartPuzzle, selectPuzzleLevel } = useGame('sokoban', areaRef)
   const [panel, setPanel] = useState<SelectionPanel | null>(null)
   const level = puzzle?.level ?? 0
   const won = puzzle?.won ?? false
@@ -75,6 +76,7 @@ export default function SokobanPage() {
       </header>
       <main ref={areaRef} className={shared.canvasArea}>
         <canvas ref={canvasRef} role="img" aria-label={`第 ${level + 1} 关推箱子棋盘，方向键移动，Z 撤销`} />
+        {reward && <PixelReward key={reward.id} kind={reward.kind} />}
         {won && <div className={styles.completed} aria-live="polite"><p>第 {level + 1} 关完成</p><button className={shared.primaryBtn} onClick={nextLevel}>{level === LEVELS.length - 1 ? '返回第 1 关' : '下一关'}</button><button className={shared.secondaryBtn} onClick={undoPuzzle}>撤销</button></div>}
       </main>
       <footer className={shared.controlArea}>

@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react'
-import type { GameAction, GameState, GameInstance } from '../games/types'
+import type { GameAction, GameState, GameInstance, RewardKind } from '../games/types'
 import { gameRegistry } from '../games/registry'
 import { useSfx } from './useSfx'
 import type { PuzzleStatus } from '../games/sokoban/types'
@@ -15,6 +15,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const instanceRef = useRef<GameInstance | null>(null)
   const scoreGainIdRef = useRef(0)
+  const [reward, setReward] = useState<{ id: number; kind: RewardKind } | null>(null)
   const [state, setState] = useState<GameState>('idle')
   const [score, setScore] = useState(0)
   const [scoreGain, setScoreGain] = useState<ScoreGainFeedback | null>(null)
@@ -55,16 +56,22 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
         return prev
       })
     }
+    const emitReward = (kind: RewardKind) => {
+      if (!document.hidden) setReward({ id: ++scoreGainIdRef.current, kind })
+    }
+    instance.onReward = emitReward
     instance.onScoreGain = (points) => {
       scoreGainIdRef.current++
       setScoreGain({ id: scoreGainIdRef.current, points })
+      emitReward('score')
     }
     instance.onGameOver = () => {
+      setReward(null)
       setState('over')
       // 清除存档
       localStorage.removeItem(STORAGE_PREFIX + gameId + '_state')
     }
-    instance.onStateChange = (s) => { setState(s); syncNextPiece() }
+    instance.onStateChange = (s) => { setState(s); if (s !== 'playing') setReward(null); syncNextPiece() }
     instance.onNextPieceChange = (pieceType) => { setNextPiece(pieceType) }
     instance.onSfx = playSfx
     instance.onPuzzleChange = (status) => {
@@ -150,6 +157,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
   }, [gameId, containerRef, playSfx])
 
   const start = useCallback(() => {
+    setReward(null)
     setScoreGain(null)
     instanceRef.current?.start()
     setNextPiece(instanceRef.current?.getNextPieceType?.() ?? null)
@@ -171,6 +179,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     localStorage.removeItem(STORAGE_PREFIX + gameId + '_state')
     setHasSavedState(false)
     setScore(0)
+    setReward(null)
     setScoreGain(null)
     setHighScore(readHighScore(gameId))
     instanceRef.current?.start()
@@ -185,6 +194,7 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     if (!instance) return
     const savedData = readSavedState(gameId)
     if (savedData) {
+      setReward(null)
       setScoreGain(null)
       instance.loadState(savedData)
       setHasSavedState(false)
@@ -199,12 +209,12 @@ export function useGame(gameId: string, containerRef: React.RefObject<HTMLElemen
     setHasSavedState(false)
   }, [gameId])
 
-  const undoPuzzle = useCallback(() => { instanceRef.current?.undo?.() }, [])
-  const restartPuzzle = useCallback(() => { instanceRef.current?.restartLevel?.() }, [])
-  const selectPuzzleLevel = useCallback((level: number) => { instanceRef.current?.selectLevel?.(level) }, [])
+  const undoPuzzle = useCallback(() => { setReward(null); instanceRef.current?.undo?.() }, [])
+  const restartPuzzle = useCallback(() => { setReward(null); instanceRef.current?.restartLevel?.() }, [])
+  const selectPuzzleLevel = useCallback((level: number) => { setReward(null); instanceRef.current?.selectLevel?.(level) }, [])
 
   return {
-    puzzle, undoPuzzle, restartPuzzle, selectPuzzleLevel,
+    reward, puzzle, undoPuzzle, restartPuzzle, selectPuzzleLevel,
     canvasRef,
     state,
     score,

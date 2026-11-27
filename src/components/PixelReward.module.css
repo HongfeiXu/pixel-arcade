@@ -1,0 +1,29 @@
+.reward {
+  position: absolute;
+  left: 50%;
+  top: 36%;
+  width: 128px;
+  height: 128px;
+  transform: translate(-50%, -50%);
+  background-size: 600% 100%;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 2;
+  animation: frames 720ms steps(6, end) forwards;
+}
+.target { background-image: url('../assets/pixelfx-target.png'); }
+.victory { background-image: url('../assets/pixelfx-victory.png'); width: 160px; height: 160px; }
+.score { background-image: url('../assets/pixelfx-score.png'); }
+@keyframes frames {
+  from { background-position: 0 0; }
+  to { background-position: -768px 0; }
+}
+.victory { animation-name: victoryFrames; }
+@keyframes victoryFrames {
+  from { background-position: 0 0; }
+  to { background-position: -960px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reward { display: none; animation: none; }
+}

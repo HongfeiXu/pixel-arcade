@@ -127,3 +127,11 @@ test('遥控器与桌面单步：忽略 repeat、漏标 repeat、keyup 后再次
   expect(getSokobanKeyAction({ keyCode: 4 })).toBe('menu')
   expect(getSokobanKeyAction({ key: 'Backspace' })).toBe('undo')
 })
+
+ test('reward only for new target and victory, not restore or undo', () => {
+  const game = new SokobanGame(); const events: string[] = []; game.onReward = kind => events.push(kind)
+  game.selectLevel(5); for (const action of ['left', 'up', 'down', 'right', 'right', 'up'] as const) game.onInput(action)
+  expect(events).toEqual(['target', 'victory'])
+  const save = game.saveState(); game.undo(); game.loadState(save); expect(events).toEqual(['target', 'victory'])
+  game.restartLevel(); expect(events).toEqual(['target', 'victory'])
+})
